@@ -1,0 +1,35 @@
+# Central configuration for the testquality tool. Secrets live in .env, never here.
+ha:
+  # Paths come from .env (HA_CORE_DIR, HA_PYTHON); these are the in-tree locations.
+  component: threshold
+  component_dir: homeassistant/components/threshold
+  developer_tests_dir: tests/components/threshold
+  generated_tests_dir: tests/components/threshold/_llm_generated
+  tag: "2026.10.1"
+  branch: study-pinned
+
+llm:
+  main_model: claude-sonnet-5-5
+  cheap_model: claude-haiku-5-5
+  max_tokens: 8000
+  samples_per_prompt: 5       # k, used to measure the noise floor
+  # Do NOT add temperature/top_p/top_k: these models reject them.
+  prompt_version: v1
+
+execution:
+  repeats: 3                  # runs per suite for flaky detection
+  timeout_seconds: 600
+
+mutation:
+  tool: mutmut
+  mutate_only_covered_lines: true
+  paths_to_mutate: homeassistant/components/threshold/
+
+review:
+  seed: 20261012
+  n_developer: 20
+  n_llm: 40
+
+paths:
+  runs_dir: data/runs
+  results_dir: results
