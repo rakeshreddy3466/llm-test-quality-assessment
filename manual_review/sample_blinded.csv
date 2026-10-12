@@ -1,0 +1,2130 @@
+item_id,test_name,test_code,context_code,relevance,clarity,maintainability,oracle_strength,notes
+R01,test_sensor_no_lower_upper,"async def test_sensor_no_lower_upper(
+    hass: HomeAssistant, caplog: pytest.LogCaptureFixture
+) -> None:
+    """"""Test if no lower or upper has been provided.""""""
+    config = {
+        Platform.BINARY_SENSOR: {
+            CONF_PLATFORM: ""threshold"",
+            CONF_ENTITY_ID: ""sensor.test_monitored"",
+        }
+    }
+
+    await async_setup_component(hass, BINARY_SENSOR_DOMAIN, config)
+    await hass.async_block_till_done()
+
+    assert ""Lower or Upper thresholds are not provided"" in caplog.text",,,,,,
+R02,test_setup_entry_follows_source_entity_rename,"async def test_setup_entry_follows_source_entity_rename(
+    hass: HomeAssistant,
+) -> None:
+    """"""Renaming the source entity updates the stored entity id option.""""""
+    entity_reg = er.async_get(hass)
+    source = entity_reg.async_get_or_create(
+        ""sensor"", ""test"", ""rename_me"", suggested_object_id=""input""
+    )
+    hass.states.async_set(source.entity_id, ""5"")
+    entry = _make_entry(entity_id=source.entity_id)
+    await _setup(hass, entry)
+
+    entity_reg.async_update_entity(source.entity_id, new_entity_id=""sensor.renamed"")
+    await hass.async_block_till_done()
+
+    assert entry.options[CONF_ENTITY_ID] == ""sensor.renamed""
+    assert entry.options[CONF_UPPER] == 10.0","def _make_entry(
+    entity_id: str = SOURCE,
+    minor_version: int = 2,
+    lower: float | None = None,
+    upper: float | None = 10.0,
+) -> MockConfigEntry:
+    return MockConfigEntry(
+        domain=DOMAIN,
+        title=""Test"",
+        data={},
+        options={
+            CONF_ENTITY_ID: entity_id,
+            CONF_HYSTERESIS: 0.0,
+            CONF_LOWER: lower,
+            CONF_UPPER: upper,
+        },
+        version=1,
+        minor_version=minor_version,
+    )
+
+async def _setup(hass: HomeAssistant, entry: MockConfigEntry) -> None:
+    entry.add_to_hass(hass)
+    await hass.config_entries.async_setup(entry.entry_id)
+    await hass.async_block_till_done()",,,,,
+R03,test_config_entry_setup,"async def test_config_entry_setup(hass: HomeAssistant) -> None:
+    """"""A config entry creates a working sensor with its title as name.""""""
+    hass.states.async_set(SOURCE, 5)
+    entry = MockConfigEntry(
+        domain=DOMAIN,
+        title=""My Threshold"",
+        version=1,
+        minor_version=2,
+        options={
+            ""entity_id"": SOURCE,
+            ""hysteresis"": 0.0,
+            ""lower"": 10.0,
+            ""upper"": None,
+        },
+    )
+    entry.add_to_hass(hass)
+    assert await hass.config_entries.async_setup(entry.entry_id)
+    await hass.async_block_till_done()
+    state = hass.states.get(""binary_sensor.my_threshold"")
+    assert state is not None
+    assert state.state == STATE_ON
+    assert state.attributes[""type""] == TYPE_LOWER",,,,,,
+R04,test_validate_mode_raises_without_limits,"async def test_validate_mode_raises_without_limits() -> None:
+    """"""_validate_mode raises SchemaFlowError when both limits are absent.""""""
+    with pytest.raises(SchemaFlowError, match=""need_lower_upper""):
+        await _validate_mode(None, {CONF_ENTITY_ID: SENSOR})",,,,,,
+R05,test_flow_steps_define_preview,"def test_flow_steps_define_preview() -> None:
+    """"""Both flows register the threshold preview.""""""
+    assert CONFIG_FLOW[""user""].preview == ""threshold""
+    assert OPTIONS_FLOW[""init""].preview == ""threshold""",,,,,,
+R06,test_setup_entry_below_upper_is_off,"async def test_setup_entry_below_upper_is_off(hass: HomeAssistant) -> None:
+    """"""A source value below the upper limit gives an off sensor.""""""
+    hass.states.async_set(SOURCE, ""10"")
+    await _setup(hass, _entry())
+
+    assert hass.states.get(BINARY).state == ""off""","def _entry(
+    *, version: int = 1, minor_version: int = 2, source: str = SOURCE
+) -> MockConfigEntry:
+    return MockConfigEntry(
+        domain=DOMAIN,
+        title=""My threshold"",
+        version=version,
+        minor_version=minor_version,
+        options={
+            ""entity_id"": source,
+            ""hysteresis"": 0.0,
+            ""lower"": None,
+            ""upper"": 20.0,
+        },
+    )
+
+async def _setup(hass: HomeAssistant, entry: MockConfigEntry) -> None:
+    entry.add_to_hass(hass)
+    assert await hass.config_entries.async_setup(entry.entry_id)
+    await hass.async_block_till_done()",,,,,
+R07,test_setup_entry_forwards_only_binary_sensor_platform,"async def test_setup_entry_forwards_only_binary_sensor_platform(
+    hass: HomeAssistant,
+) -> None:
+    """"""Setup forwards the entry to the binary_sensor platform only.""""""
+    hass.states.async_set(SOURCE, ""25"")
+    entry = _make_entry()
+    entry.add_to_hass(hass)
+
+    with patch.object(
+        hass.config_entries, ""async_forward_entry_setups"", AsyncMock()
+    ) as forward:
+        assert await hass.config_entries.async_setup(entry.entry_id)
+        await hass.async_block_till_done()
+
+    forward.assert_awaited_once_with(entry, (Platform.BINARY_SENSOR,))","def _make_entry(
+    entity_id: str = SOURCE, minor_version: int = 2, version: int = 1
+) -> MockConfigEntry:
+    """"""Create a threshold config entry with a lower limit of 20.""""""
+    return MockConfigEntry(
+        domain=DOMAIN,
+        title=""My threshold"",
+        version=version,
+        minor_version=minor_version,
+        options={
+            CONF_ENTITY_ID: entity_id,
+            CONF_HYSTERESIS: 0.0,
+            CONF_LOWER: 20.0,
+            CONF_UPPER: None,
+        },
+    )",,,,,
+R08,test_user_flow_recovers_after_error,"async def test_user_flow_recovers_after_error(hass: HomeAssistant) -> None:
+    """"""After the need_lower_upper error a valid submission creates an entry.""""""
+    result = await _start(hass)
+    result = await hass.config_entries.flow.async_configure(
+        result[""flow_id""], {""name"": ""X"", ""entity_id"": SENSOR}
+    )
+    assert result[""errors""] == {""base"": ""need_lower_upper""}
+    with patch(
+        ""homeassistant.components.threshold.async_setup_entry"", return_value=True
+    ):
+        result = await hass.config_entries.flow.async_configure(
+            result[""flow_id""], {""name"": ""X"", ""entity_id"": SENSOR, ""upper"": 3.0}
+        )
+        await hass.async_block_till_done()
+    assert result[""type""] is FlowResultType.CREATE_ENTRY","async def _start(hass: HomeAssistant):
+    """"""Start the user flow.""""""
+    return await hass.config_entries.flow.async_init(
+        DOMAIN, context={""source"": SOURCE_USER}
+    )",,,,,
+R09,test_options,"async def test_options(hass: HomeAssistant) -> None:
+    """"""Test reconfiguring.""""""
+    input_sensor = ""sensor.input""
+    hass.states.async_set(input_sensor, ""10"")
+
+    # Setup the config entry
+    config_entry = MockConfigEntry(
+        data={},
+        domain=DOMAIN,
+        options={
+            ""entity_id"": input_sensor,
+            ""hysteresis"": 0.0,
+            ""lower"": -2.0,
+            ""name"": ""My threshold"",
+            ""upper"": None,
+        },
+        title=""My threshold"",
+    )
+    config_entry.add_to_hass(hass)
+    assert await hass.config_entries.async_setup(config_entry.entry_id)
+    await hass.async_block_till_done()
+
+    result = await hass.config_entries.options.async_init(config_entry.entry_id)
+    assert result[""type""] is FlowResultType.FORM
+    assert result[""step_id""] == ""init""
+    schema = result[""data_schema""].schema
+    assert get_schema_suggested_value(schema, ""hysteresis"") == 0.0
+    assert get_schema_suggested_value(schema, ""lower"") == -2.0
+    assert get_schema_suggested_value(schema, ""upper"") is None
+
+    result = await hass.config_entries.options.async_configure(
+        result[""flow_id""],
+        user_input={
+            ""entity_id"": input_sensor,
+            ""hysteresis"": 0.0,
+            ""upper"": 20.0,
+        },
+    )
+    assert result[""type""] is FlowResultType.CREATE_ENTRY
+    assert result[""data""] == {
+        ""entity_id"": input_sensor,
+        ""hysteresis"": 0.0,
+        ""lower"": None,
+        ""name"": ""My threshold"",
+        ""upper"": 20.0,
+    }
+    assert config_entry.data == {}
+    assert config_entry.options == {
+        ""entity_id"": input_sensor,
+        ""hysteresis"": 0.0,
+        ""lower"": None,
+        ""name"": ""My threshold"",
+        ""upper"": 20.0,
+    }
+    assert config_entry.title == ""My threshold""
+
+    # Check config entry is reloaded with new options
+    await hass.async_block_till_done()
+
+    # Check the entity was updated, no new entity was created
+    assert len(hass.states.async_all()) == 2
+
+    # Check the state of the entity has changed as expected
+    state = hass.states.get(""binary_sensor.my_threshold"")
+    assert state.state == ""off""
+    assert state.attributes[""type""] == ""upper""",,,,,,
+R10,test_config_flow_preview_success,"@pytest.mark.parametrize(
+    ""user_input"",
+    [
+        (
+            {
+                ""name"": ""Test Sensor"",
+                ""entity_id"": ""sensor.test_monitored"",
+                ""hysteresis"": 0.0,
+                ""lower"": 20.0,
+            }
+        ),
+        (
+            {
+                ""name"": ""Test Sensor"",
+                ""entity_id"": ""sensor.test_monitored"",
+                ""hysteresis"": 0.0,
+            }
+        ),
+        (
+            {
+                ""name"": """",
+                ""entity_id"": """",
+                ""hysteresis"": 0.0,
+                ""lower"": 20.0,
+            }
+        ),
+        (
+            {
+                ""name"": ""Test Sensor"",
+                ""entity_id"": ""sensor.test_monitored"",
+                ""lower"": 20.0,
+            }
+        ),
+    ],
+    ids=(
+        ""success"",
+        ""missing_upper_lower"",
+        ""missing_entity_id"",
+        ""missing_hysteresis"",
+    ),
+)
+async def test_config_flow_preview_success(
+    hass: HomeAssistant,
+    hass_ws_client: WebSocketGenerator,
+    user_input: str,
+    snapshot: SnapshotAssertion,
+) -> None:
+    """"""Test the config flow preview.""""""
+    client = await hass_ws_client(hass)
+
+    # add state for the tests
+    hass.states.async_set(
+        ""sensor.test_monitored"",
+        16,
+        {ATTR_UNIT_OF_MEASUREMENT: UnitOfTemperature.CELSIUS},
+    )
+
+    result = await hass.config_entries.flow.async_init(
+        DOMAIN, context={""source"": config_entries.SOURCE_USER}
+    )
+    assert result[""type""] is FlowResultType.FORM
+    assert result[""step_id""] == ""user""
+    assert result[""errors""] is None
+    assert result[""preview""] == ""threshold""
+
+    await client.send_json_auto_id(
+        {
+            ""type"": ""threshold/start_preview"",
+            ""flow_id"": result[""flow_id""],
+            ""flow_type"": ""config_flow"",
+            ""user_input"": user_input,
+        }
+    )
+    msg = await client.receive_json()
+    assert msg[""success""]
+    assert msg[""result""] is None
+
+    msg = await client.receive_json()
+    assert msg[""event""] == snapshot
+    assert len(hass.states.async_all()) == 1",,,,,,
+R11,test_platform_schema_requires_threshold,"def test_platform_schema_requires_threshold() -> None:
+    """"""The platform schema rejects config without limits.""""""
+    with pytest.raises(probatio.Invalid):
+        PLATFORM_SCHEMA(
+            {""platform"": ""threshold"", ""entity_id"": SOURCE},
+        )",,,,,,
+R12,test_setup_entry_follows_source_entity_rename,"async def test_setup_entry_follows_source_entity_rename(hass: HomeAssistant) -> None:
+    """"""Renaming the source entity updates the entry's entity_id option.""""""
+    _, _, entity = _make_source_with_device(hass)
+    hass.states.async_set(entity.entity_id, ""25"")
+    entry = _make_entry(entity_id=entity.entity_id)
+    entry.add_to_hass(hass)
+    assert await hass.config_entries.async_setup(entry.entry_id)
+    await hass.async_block_till_done()
+
+    er.async_get(hass).async_update_entity(
+        entity.entity_id, new_entity_id=""sensor.renamed_input""
+    )
+    await hass.async_block_till_done()
+
+    assert entry.options[CONF_ENTITY_ID] == ""sensor.renamed_input""","def _make_entry(
+    entity_id: str = SOURCE, minor_version: int = 2, version: int = 1
+) -> MockConfigEntry:
+    """"""Create a threshold config entry with a lower limit of 20.""""""
+    return MockConfigEntry(
+        domain=DOMAIN,
+        title=""My threshold"",
+        version=version,
+        minor_version=minor_version,
+        options={
+            CONF_ENTITY_ID: entity_id,
+            CONF_HYSTERESIS: 0.0,
+            CONF_LOWER: 20.0,
+            CONF_UPPER: None,
+        },
+    )
+
+def _make_source_with_device(hass: HomeAssistant):
+    """"""Create a source entity attached to a device; return (source_entry, device, entity).""""""
+    source_entry = MockConfigEntry(domain=""test_source"")
+    source_entry.add_to_hass(hass)
+    device = dr.async_get(hass).async_get_or_create(
+        config_entry_id=source_entry.entry_id,
+        identifiers={(""test_source"", ""dev1"")},
+    )
+    entity = er.async_get(hass).async_get_or_create(
+        ""sensor"",
+        ""test_source"",
+        ""unique1"",
+        config_entry=source_entry,
+        device_id=device.id,
+    )
+    return source_entry, device, entity",,,,,
+R13,test_setup_entry_sensor_on_when_above_upper,"async def test_setup_entry_sensor_on_when_above_upper(hass: HomeAssistant) -> None:
+    """"""The forwarded binary sensor turns on when the source value exceeds the upper limit.""""""
+    hass.states.async_set(SOURCE, ""20"")
+    entry = _make_entry()
+    await _setup(hass, entry)
+
+    assert hass.states.get(SENSOR).state == STATE_ON","def _make_entry(
+    *,
+    version: int = 1,
+    minor_version: int = 2,
+    options: dict | None = None,
+    entity_id: str = SOURCE,
+) -> MockConfigEntry:
+    """"""Create a threshold config entry (upper threshold 15 by default).""""""
+    if options is None:
+        options = {
+            CONF_ENTITY_ID: entity_id,
+            CONF_HYSTERESIS: 0.0,
+            CONF_LOWER: None,
+            CONF_UPPER: 15.0,
+        }
+    return MockConfigEntry(
+        domain=DOMAIN,
+        title=""Test"",
+        version=version,
+        minor_version=minor_version,
+        options=options,
+    )
+
+async def _setup(hass: HomeAssistant, entry: MockConfigEntry) -> None:
+    """"""Add the entry and set it up.""""""
+    entry.add_to_hass(hass)
+    await hass.config_entries.async_setup(entry.entry_id)
+    await hass.async_block_till_done()",,,,,
+R14,test_unload_entry_unloads_and_runs_cleanup,"async def test_unload_entry_unloads_and_runs_cleanup(hass: HomeAssistant) -> None:
+    """"""Unloading an entry unloads platforms and runs the registered cleanup.""""""
+    hass.states.async_set(SOURCE, ""15"")
+    entry = _make_entry(hass)
+    unsub = MagicMock()
+
+    with patch(f""{MODULE}.async_handle_source_entity_changes"", return_value=unsub):
+        assert await hass.config_entries.async_setup(entry.entry_id)
+        await hass.async_block_till_done()
+        assert await hass.config_entries.async_unload(entry.entry_id)
+        await hass.async_block_till_done()
+
+    assert entry.state is ConfigEntryState.NOT_LOADED
+    unsub.assert_called_once()
+    state = hass.states.get(""binary_sensor.test"")
+    assert state is not None
+    assert state.state == STATE_UNAVAILABLE","def _make_entry(
+    hass: HomeAssistant, *, version: int = 1, minor_version: int = 2
+) -> MockConfigEntry:
+    """"""Create a threshold config entry and add it to hass.""""""
+    entry = MockConfigEntry(
+        domain=DOMAIN,
+        title=""test"",
+        version=version,
+        minor_version=minor_version,
+        options={
+            CONF_ENTITY_ID: SOURCE,
+            CONF_HYSTERESIS: 0.0,
+            CONF_LOWER: None,
+            CONF_UPPER: 10.0,
+        },
+    )
+    entry.add_to_hass(hass)
+    return entry",,,,,
+R15,test_unload_entry_delegates_to_unload_platforms,"async def test_unload_entry_delegates_to_unload_platforms(
+    hass: HomeAssistant,
+) -> None:
+    """"""Async_unload_entry returns the result of unloading the binary_sensor platform.""""""
+    from homeassistant.components.threshold import async_unload_entry
+
+    entry = _make_entry()
+    with patch.object(
+        hass.config_entries, ""async_unload_platforms"", AsyncMock(return_value=False)
+    ) as unload:
+        result = await async_unload_entry(hass, entry)
+
+    assert result is False
+    unload.assert_awaited_once_with(entry, (Platform.BINARY_SENSOR,))","def _make_entry(
+    entity_id: str = SOURCE, minor_version: int = 2, version: int = 1
+) -> MockConfigEntry:
+    """"""Create a threshold config entry with a lower limit of 20.""""""
+    return MockConfigEntry(
+        domain=DOMAIN,
+        title=""My threshold"",
+        version=version,
+        minor_version=minor_version,
+        options={
+            CONF_ENTITY_ID: entity_id,
+            CONF_HYSTERESIS: 0.0,
+            CONF_LOWER: 20.0,
+            CONF_UPPER: None,
+        },
+    )",,,,,
+R16,test_async_config_entry_title_uses_name,"def test_async_config_entry_title_uses_name() -> None:
+    """"""The entry title is taken from the name option.""""""
+    handler = ConfigFlowHandler()
+    assert handler.async_config_entry_title({CONF_NAME: ""My Threshold""}) == (
+        ""My Threshold""
+    )",,,,,,
+R17,test_user_step_shows_form,"async def test_user_step_shows_form(hass: HomeAssistant) -> None:
+    """"""Starting the user flow shows the user form.""""""
+    result = await _start_user_flow(hass)
+    assert result[""type""] is FlowResultType.FORM
+    assert result[""step_id""] == ""user""","async def _start_user_flow(hass: HomeAssistant):
+    """"""Start the user config flow.""""""
+    return await hass.config_entries.flow.async_init(
+        DOMAIN, context={""source"": config_entries.SOURCE_USER}
+    )",,,,,
+R18,test_minor_version,"async def test_minor_version() -> None:
+    """"""The handler declares minor version 2.""""""
+    assert ConfigFlowHandler.MINOR_VERSION == 2
+    assert ConfigFlowHandler.options_flow_reloads is True",,,,,,
+R19,test_migration_1_1,"async def test_migration_1_1(
+    hass: HomeAssistant,
+    device_registry: dr.DeviceRegistry,
+    entity_registry: er.EntityRegistry,
+    sensor_entity_entry: er.RegistryEntry,
+    sensor_device: dr.DeviceEntry,
+) -> None:
+    """"""Test migration from v1.1 keeps the helper entity linked to the source device.""""""
+
+    threshold_config_entry = MockConfigEntry(
+        data={},
+        domain=DOMAIN,
+        options={
+            ""entity_id"": sensor_entity_entry.entity_id,
+            ""hysteresis"": 0.0,
+            ""lower"": -2.0,
+            ""name"": ""My threshold"",
+            ""upper"": None,
+        },
+        title=""My threshold"",
+        version=1,
+        minor_version=1,
+    )
+    threshold_config_entry.add_to_hass(hass)
+
+    await hass.config_entries.async_setup(threshold_config_entry.entry_id)
+    await hass.async_block_till_done()
+
+    assert threshold_config_entry.state is ConfigEntryState.LOADED
+
+    # Check that the helper config entry is not in the device and the helper entity
+    # is linked to the source device
+    sensor_device = device_registry.async_get(sensor_device.id)
+    assert sensor_device.config_entry_id != threshold_config_entry.entry_id
+    threshold_entity_entry = entity_registry.async_get(
+        ""binary_sensor.mock_title_my_threshold""
+    )
+    assert threshold_entity_entry.device_id == sensor_entity_entry.device_id
+
+    assert threshold_config_entry.version == 1
+    assert threshold_config_entry.minor_version == 2","@pytest.fixture
+def sensor_device(
+    device_registry: dr.DeviceRegistry, sensor_config_entry: ConfigEntry
+) -> dr.DeviceEntry:
+    """"""Fixture to create a sensor device.""""""
+    return device_registry.async_get_or_create(
+        config_entry_id=sensor_config_entry.entry_id,
+        connections={(dr.CONNECTION_NETWORK_MAC, ""12:34:56:AB:CD:EF"")},
+    )
+
+@pytest.fixture
+def sensor_entity_entry(
+    entity_registry: er.EntityRegistry,
+    sensor_config_entry: ConfigEntry,
+    sensor_device: dr.DeviceEntry,
+) -> er.RegistryEntry:
+    """"""Fixture to create a sensor entity entry.""""""
+    return entity_registry.async_get_or_create(
+        ""sensor"",
+        ""test"",
+        ""unique"",
+        config_entry=sensor_config_entry,
+        device_id=sensor_device.id,
+        original_name=""ABC"",
+    )
+
+@pytest.fixture
+def threshold_config_entry(
+    hass: HomeAssistant,
+    sensor_entity_entry: er.RegistryEntry,
+) -> MockConfigEntry:
+    """"""Fixture to create a threshold config entry.""""""
+    config_entry = MockConfigEntry(
+        data={},
+        domain=DOMAIN,
+        options={
+            ""entity_id"": sensor_entity_entry.entity_id,
+            ""hysteresis"": 0.0,
+            ""lower"": -2.0,
+            ""name"": ""My threshold"",
+            ""upper"": None,
+        },
+        title=""My threshold"",
+        version=ConfigFlowHandler.VERSION,
+        minor_version=ConfigFlowHandler.MINOR_VERSION,
+    )
+
+    config_entry.add_to_hass(hass)
+
+    return config_entry",,,,,
+R20,test_range_outside_is_off,"async def test_range_outside_is_off(hass: HomeAssistant) -> None:
+    """"""A range sensor is off below and above the range.""""""
+    await _setup_yaml(hass, lower=10, upper=20)
+    await _set(hass, 5)
+    state = hass.states.get(TARGET)
+    assert state.state == STATE_OFF
+    assert state.attributes[""position""] == ""below""
+    await _set(hass, 25)
+    state = hass.states.get(TARGET)
+    assert state.state == STATE_OFF
+    assert state.attributes[""position""] == ""above""","async def _setup_yaml(hass: HomeAssistant, **kwargs) -> None:
+    """"""Set up a YAML threshold sensor.""""""
+    config = {
+        ""binary_sensor"": {
+            ""platform"": ""threshold"",
+            ""name"": ""threshold"",
+            ""entity_id"": SOURCE,
+            **kwargs,
+        }
+    }
+    assert await async_setup_component(hass, ""binary_sensor"", config)
+    await hass.async_block_till_done()
+
+async def _set(hass: HomeAssistant, value) -> None:
+    """"""Set the source state.""""""
+    hass.states.async_set(SOURCE, value)
+    await hass.async_block_till_done()",,,,,
+R21,test_migrate_without_source_device_skips_removal,"async def test_migrate_without_source_device_skips_removal(
+    hass: HomeAssistant,
+) -> None:
+    """"""No device removal happens when the source entity has no device.""""""
+    entry = _make_entry(minor_version=1)
+    entry.add_to_hass(hass)
+
+    with patch(
+        ""homeassistant.components.threshold.async_remove_helper_devices""
+    ) as remove:
+        assert await async_migrate_entry(hass, entry) is True
+
+    remove.assert_not_called()
+    assert entry.minor_version == 2","def _make_entry(
+    entity_id: str = SOURCE,
+    minor_version: int = 2,
+    lower: float | None = None,
+    upper: float | None = 10.0,
+) -> MockConfigEntry:
+    return MockConfigEntry(
+        domain=DOMAIN,
+        title=""Test"",
+        data={},
+        options={
+            CONF_ENTITY_ID: entity_id,
+            CONF_HYSTERESIS: 0.0,
+            CONF_LOWER: lower,
+            CONF_UPPER: upper,
+        },
+        version=1,
+        minor_version=minor_version,
+    )",,,,,
+R22,test_async_handle_source_entity_changes_source_entity_removed_shared_device,"async def test_async_handle_source_entity_changes_source_entity_removed_shared_device(
+    hass: HomeAssistant,
+    device_registry: dr.DeviceRegistry,
+    entity_registry: er.EntityRegistry,
+    threshold_config_entry: MockConfigEntry,
+    sensor_device: dr.DeviceEntry,
+    sensor_entity_entry: er.RegistryEntry,
+) -> None:
+    """"""Test the source entity is removed but the source device is not removed.""""""
+    assert await hass.config_entries.async_setup(threshold_config_entry.entry_id)
+    await hass.async_block_till_done()
+
+    threshold_entity_entry = entity_registry.async_get(
+        ""binary_sensor.mock_title_my_threshold""
+    )
+    assert threshold_entity_entry.device_id == sensor_entity_entry.device_id
+
+    sensor_device = device_registry.async_get(sensor_device.id)
+    assert sensor_device.config_entry_id != threshold_config_entry.entry_id
+
+    events = track_entity_registry_actions(hass, threshold_entity_entry.entity_id)
+
+    # Remove the source entity, this does not remove the source device
+    with patch(
+        ""homeassistant.components.threshold.async_unload_entry"",
+        wraps=threshold.async_unload_entry,
+    ) as mock_unload_entry:
+        entity_registry.async_remove(sensor_entity_entry.entity_id)
+        await hass.async_block_till_done()
+        await hass.async_block_till_done()
+    mock_unload_entry.assert_not_called()
+
+    # Check that the entity is no longer linked to the source device
+    threshold_entity_entry = entity_registry.async_get(
+        ""binary_sensor.mock_title_my_threshold""
+    )
+    assert threshold_entity_entry.device_id is None
+
+    # Check that the source device is not removed
+    assert device_registry.async_get(sensor_device.id) is not None
+
+    # Check that the threshold config entry is not in the device
+    sensor_device = device_registry.async_get(sensor_device.id)
+    assert sensor_device.config_entry_id != threshold_config_entry.entry_id
+
+    # Check that the threshold config entry is not removed
+    assert threshold_config_entry.entry_id in hass.config_entries.async_entry_ids()
+
+    # Check we got the expected events
+    assert events == [""update""]","@pytest.fixture
+def sensor_device(
+    device_registry: dr.DeviceRegistry, sensor_config_entry: ConfigEntry
+) -> dr.DeviceEntry:
+    """"""Fixture to create a sensor device.""""""
+    return device_registry.async_get_or_create(
+        config_entry_id=sensor_config_entry.entry_id,
+        connections={(dr.CONNECTION_NETWORK_MAC, ""12:34:56:AB:CD:EF"")},
+    )
+
+@pytest.fixture
+def sensor_entity_entry(
+    entity_registry: er.EntityRegistry,
+    sensor_config_entry: ConfigEntry,
+    sensor_device: dr.DeviceEntry,
+) -> er.RegistryEntry:
+    """"""Fixture to create a sensor entity entry.""""""
+    return entity_registry.async_get_or_create(
+        ""sensor"",
+        ""test"",
+        ""unique"",
+        config_entry=sensor_config_entry,
+        device_id=sensor_device.id,
+        original_name=""ABC"",
+    )
+
+@pytest.fixture
+def threshold_config_entry(
+    hass: HomeAssistant,
+    sensor_entity_entry: er.RegistryEntry,
+) -> MockConfigEntry:
+    """"""Fixture to create a threshold config entry.""""""
+    config_entry = MockConfigEntry(
+        data={},
+        domain=DOMAIN,
+        options={
+            ""entity_id"": sensor_entity_entry.entity_id,
+            ""hysteresis"": 0.0,
+            ""lower"": -2.0,
+            ""name"": ""My threshold"",
+            ""upper"": None,
+        },
+        title=""My threshold"",
+        version=ConfigFlowHandler.VERSION,
+        minor_version=ConfigFlowHandler.MINOR_VERSION,
+    )
+
+    config_entry.add_to_hass(hass)
+
+    return config_entry
+
+def track_entity_registry_actions(hass: HomeAssistant, entity_id: str) -> list[str]:
+    """"""Track entity registry actions for an entity.""""""
+    events = []
+
+    @callback
+    def add_event(event: Event[er.EventEntityRegistryUpdatedData]) -> None:
+        """"""Add entity registry updated event to the list.""""""
+        events.append(event.data[""action""])
+
+    async_track_entity_registry_updated_event(hass, entity_id, add_event)
+
+    return events",,,,,
+R23,test_recovers_after_unknown,"async def test_recovers_after_unknown(hass: HomeAssistant) -> None:
+    """"""The sensor resumes evaluating after an unknown value.""""""
+    await _setup_platform(hass, upper=10, initial=""20"")
+    await _set(hass, STATE_UNKNOWN)
+    await _set(hass, 5)
+    assert hass.states.get(TARGET).state == STATE_OFF","async def _setup_platform(
+    hass: HomeAssistant,
+    *,
+    lower=None,
+    upper=None,
+    hysteresis=None,
+    initial=None,
+    device_class=None,
+) -> None:
+    """"""Set up a YAML threshold platform.""""""
+    if initial is not None:
+        hass.states.async_set(SOURCE, initial)
+    conf = {""platform"": ""threshold"", ""entity_id"": SOURCE}
+    if lower is not None:
+        conf[""lower""] = lower
+    if upper is not None:
+        conf[""upper""] = upper
+    if hysteresis is not None:
+        conf[""hysteresis""] = hysteresis
+    if device_class is not None:
+        conf[""device_class""] = device_class
+    assert await async_setup_component(hass, ""binary_sensor"", {""binary_sensor"": conf})
+    await hass.async_block_till_done()
+
+async def _set(hass: HomeAssistant, value) -> None:
+    """"""Set the source sensor state.""""""
+    hass.states.async_set(SOURCE, str(value))
+    await hass.async_block_till_done()",,,,,
+R24,test_initial_state_read_from_existing_source,"async def test_initial_state_read_from_existing_source(hass: HomeAssistant) -> None:
+    """"""An existing source state is used when the sensor is added.""""""
+    hass.states.async_set(SOURCE, 30)
+    await _setup_yaml(hass, upper=15)
+    assert hass.states.get(TARGET).state == STATE_ON","async def _setup_yaml(hass: HomeAssistant, **kwargs) -> None:
+    """"""Set up a YAML threshold sensor.""""""
+    config = {
+        ""binary_sensor"": {
+            ""platform"": ""threshold"",
+            ""name"": ""threshold"",
+            ""entity_id"": SOURCE,
+            **kwargs,
+        }
+    }
+    assert await async_setup_component(hass, ""binary_sensor"", config)
+    await hass.async_block_till_done()",,,,,
+R25,test_sensor_upper_zero_threshold,"async def test_sensor_upper_zero_threshold(hass: HomeAssistant) -> None:
+    """"""Test if an upper threshold of zero is set.""""""
+    config = {
+        Platform.BINARY_SENSOR: {
+            CONF_PLATFORM: ""threshold"",
+            CONF_UPPER: ""0"",
+            CONF_ENTITY_ID: ""sensor.test_monitored"",
+        }
+    }
+
+    assert await async_setup_component(hass, BINARY_SENSOR_DOMAIN, config)
+    await hass.async_block_till_done()
+
+    hass.states.async_set(""sensor.test_monitored"", -10)
+    await hass.async_block_till_done()
+    state = hass.states.get(""binary_sensor.threshold"")
+    assert state.attributes[ATTR_TYPE] == TYPE_UPPER
+    assert state.attributes[ATTR_UPPER] == float(
+        config[Platform.BINARY_SENSOR][CONF_UPPER]
+    )
+    assert state.state == STATE_OFF
+
+    hass.states.async_set(""sensor.test_monitored"", 2)
+    await hass.async_block_till_done()
+    state = hass.states.get(""binary_sensor.threshold"")
+    assert state.state == STATE_ON",,,,,,
+R26,test_sensor_upper_hysteresis,"@pytest.mark.parametrize(
+    (""vals"", ""expected_position"", ""expected_state""),
+    [
+        ([17.5], POSITION_BELOW, STATE_OFF),  # threshold + hysteresis
+        ([17.5, 12.5], POSITION_BELOW, STATE_OFF),  # threshold - hysteresis
+        ([17.5, 12.5, 20], POSITION_ABOVE, STATE_ON),
+        ([17.5, 12.5, 20, 13], POSITION_ABOVE, STATE_ON),
+        ([17.5, 12.5, 20, 13, 12], POSITION_BELOW, STATE_OFF),
+        ([17.5, 12.5, 20, 13, 12, 17], POSITION_BELOW, STATE_OFF),
+        ([17.5, 12.5, 20, 13, 12, 17, 18], POSITION_ABOVE, STATE_ON),
+        ([17.5, 12.5, 20, 13, 12, 17, 18, ""cat""], POSITION_UNKNOWN, STATE_UNKNOWN),
+        ([17.5, 12.5, 20, 13, 12, 17, 18, ""cat"", 18], POSITION_ABOVE, STATE_ON),
+        ([18, None], POSITION_UNKNOWN, STATE_UNKNOWN),
+        # below within -> above
+        ([14, 17.6], POSITION_ABOVE, STATE_ON),
+        # above within -> below
+        ([16, 12.4], POSITION_BELOW, STATE_OFF),
+        # below within -> above within
+        ([14, 16], POSITION_BELOW, STATE_OFF),
+        # above within -> below within
+        ([16, 14], POSITION_BELOW, STATE_OFF),
+        # above -> above within -> below within
+        ([20, 16, 14], POSITION_ABOVE, STATE_ON),
+        # below -> below within -> above within
+        ([10, 14, 16], POSITION_BELOW, STATE_OFF),
+    ],
+)
+async def test_sensor_upper_hysteresis(
+    hass: HomeAssistant,
+    vals: list[float | str | None],
+    expected_position: str,
+    expected_state: str,
+) -> None:
+    """"""Test if source is above threshold using hysteresis.""""""
+    config = {
+        Platform.BINARY_SENSOR: {
+            CONF_PLATFORM: ""threshold"",
+            CONF_UPPER: ""15"",
+            CONF_HYSTERESIS: ""2.5"",
+            CONF_ENTITY_ID: ""sensor.test_monitored"",
+        }
+    }
+
+    assert await async_setup_component(hass, BINARY_SENSOR_DOMAIN, config)
+    await hass.async_block_till_done()
+
+    state = hass.states.get(""binary_sensor.threshold"")
+    assert state.attributes[ATTR_ENTITY_ID] == ""sensor.test_monitored""
+    assert state.attributes[ATTR_UPPER] == float(
+        config[Platform.BINARY_SENSOR][CONF_UPPER]
+    )
+    assert state.attributes[ATTR_HYSTERESIS] == 2.5
+    assert state.attributes[ATTR_TYPE] == TYPE_UPPER
+
+    for val in vals:
+        hass.states.async_set(""sensor.test_monitored"", val)
+        await hass.async_block_till_done()
+    state = hass.states.get(""binary_sensor.threshold"")
+    assert state.attributes[ATTR_POSITION] == expected_position
+    assert state.state == expected_state",,,,,,
+R27,test_async_handle_source_entity_new_entity_id,"async def test_async_handle_source_entity_new_entity_id(
+    hass: HomeAssistant,
+    device_registry: dr.DeviceRegistry,
+    entity_registry: er.EntityRegistry,
+    threshold_config_entry: MockConfigEntry,
+    sensor_device: dr.DeviceEntry,
+    sensor_entity_entry: er.RegistryEntry,
+) -> None:
+    """"""Test the source entity's entity ID is changed.""""""
+    assert await hass.config_entries.async_setup(threshold_config_entry.entry_id)
+    await hass.async_block_till_done()
+
+    threshold_entity_entry = entity_registry.async_get(
+        ""binary_sensor.mock_title_my_threshold""
+    )
+    assert threshold_entity_entry.device_id == sensor_entity_entry.device_id
+
+    sensor_device = device_registry.async_get(sensor_device.id)
+    assert sensor_device.config_entry_id != threshold_config_entry.entry_id
+
+    events = track_entity_registry_actions(hass, threshold_entity_entry.entity_id)
+
+    # Change the source entity's entity ID
+    with patch(
+        ""homeassistant.components.threshold.async_unload_entry"",
+        wraps=threshold.async_unload_entry,
+    ) as mock_unload_entry:
+        entity_registry.async_update_entity(
+            sensor_entity_entry.entity_id, new_entity_id=""sensor.new_entity_id""
+        )
+        await hass.async_block_till_done()
+    mock_unload_entry.assert_called_once()
+
+    # Check that the threshold config entry is updated with the new entity ID
+    assert threshold_config_entry.options[""entity_id""] == ""sensor.new_entity_id""
+
+    # Check that the helper config is not in the device
+    sensor_device = device_registry.async_get(sensor_device.id)
+    assert sensor_device.config_entry_id != threshold_config_entry.entry_id
+
+    # Check that the threshold config entry is not removed
+    assert threshold_config_entry.entry_id in hass.config_entries.async_entry_ids()
+
+    # Check we got the expected events
+    assert events == []","@pytest.fixture
+def sensor_device(
+    device_registry: dr.DeviceRegistry, sensor_config_entry: ConfigEntry
+) -> dr.DeviceEntry:
+    """"""Fixture to create a sensor device.""""""
+    return device_registry.async_get_or_create(
+        config_entry_id=sensor_config_entry.entry_id,
+        connections={(dr.CONNECTION_NETWORK_MAC, ""12:34:56:AB:CD:EF"")},
+    )
+
+@pytest.fixture
+def sensor_entity_entry(
+    entity_registry: er.EntityRegistry,
+    sensor_config_entry: ConfigEntry,
+    sensor_device: dr.DeviceEntry,
+) -> er.RegistryEntry:
+    """"""Fixture to create a sensor entity entry.""""""
+    return entity_registry.async_get_or_create(
+        ""sensor"",
+        ""test"",
+        ""unique"",
+        config_entry=sensor_config_entry,
+        device_id=sensor_device.id,
+        original_name=""ABC"",
+    )
+
+@pytest.fixture
+def threshold_config_entry(
+    hass: HomeAssistant,
+    sensor_entity_entry: er.RegistryEntry,
+) -> MockConfigEntry:
+    """"""Fixture to create a threshold config entry.""""""
+    config_entry = MockConfigEntry(
+        data={},
+        domain=DOMAIN,
+        options={
+            ""entity_id"": sensor_entity_entry.entity_id,
+            ""hysteresis"": 0.0,
+            ""lower"": -2.0,
+            ""name"": ""My threshold"",
+            ""upper"": None,
+        },
+        title=""My threshold"",
+        version=ConfigFlowHandler.VERSION,
+        minor_version=ConfigFlowHandler.MINOR_VERSION,
+    )
+
+    config_entry.add_to_hass(hass)
+
+    return config_entry
+
+def track_entity_registry_actions(hass: HomeAssistant, entity_id: str) -> list[str]:
+    """"""Track entity registry actions for an entity.""""""
+    events = []
+
+    @callback
+    def add_event(event: Event[er.EventEntityRegistryUpdatedData]) -> None:
+        """"""Add entity registry updated event to the list.""""""
+        events.append(event.data[""action""])
+
+    async_track_entity_registry_updated_event(hass, entity_id, add_event)
+
+    return events",,,,,
+R28,test_setup_entry_below_upper_threshold_is_off,"async def test_setup_entry_below_upper_threshold_is_off(
+    hass: HomeAssistant,
+) -> None:
+    """"""A source value below the upper limit yields an off sensor.""""""
+    hass.states.async_set(SOURCE, ""5"")
+    await _setup(hass, _make_entry())
+
+    assert hass.states.get(""binary_sensor.test"").state == STATE_OFF","def _make_entry(
+    entity_id: str = SOURCE,
+    minor_version: int = 2,
+    lower: float | None = None,
+    upper: float | None = 10.0,
+) -> MockConfigEntry:
+    return MockConfigEntry(
+        domain=DOMAIN,
+        title=""Test"",
+        data={},
+        options={
+            CONF_ENTITY_ID: entity_id,
+            CONF_HYSTERESIS: 0.0,
+            CONF_LOWER: lower,
+            CONF_UPPER: upper,
+        },
+        version=1,
+        minor_version=minor_version,
+    )
+
+async def _setup(hass: HomeAssistant, entry: MockConfigEntry) -> None:
+    entry.add_to_hass(hass)
+    await hass.config_entries.async_setup(entry.entry_id)
+    await hass.async_block_till_done()",,,,,
+R29,test_fail,"@pytest.mark.parametrize((""extra_input_data"", ""error""), [({}, ""need_lower_upper"")])
+async def test_fail(hass: HomeAssistant, extra_input_data, error) -> None:
+    """"""Test not providing lower or upper limit fails.""""""
+    input_sensor = ""sensor.input""
+
+    result = await hass.config_entries.flow.async_init(
+        DOMAIN, context={""source"": config_entries.SOURCE_USER}
+    )
+    assert result[""type""] is FlowResultType.FORM
+    assert result[""errors""] is None
+
+    result = await hass.config_entries.flow.async_configure(
+        result[""flow_id""],
+        {
+            ""entity_id"": input_sensor,
+            ""name"": ""My threshold sensor"",
+            **extra_input_data,
+        },
+    )
+
+    assert result[""type""] is FlowResultType.FORM
+    assert result[""errors""] == {""base"": error}",,,,,,
+R30,test_sensor_lower_zero_threshold,"async def test_sensor_lower_zero_threshold(hass: HomeAssistant) -> None:
+    """"""Test if a lower threshold of zero is set.""""""
+    config = {
+        Platform.BINARY_SENSOR: {
+            CONF_PLATFORM: ""threshold"",
+            CONF_LOWER: ""0"",
+            CONF_ENTITY_ID: ""sensor.test_monitored"",
+        }
+    }
+
+    assert await async_setup_component(hass, BINARY_SENSOR_DOMAIN, config)
+    await hass.async_block_till_done()
+
+    hass.states.async_set(""sensor.test_monitored"", 16)
+    await hass.async_block_till_done()
+    state = hass.states.get(""binary_sensor.threshold"")
+    assert state.attributes[ATTR_TYPE] == TYPE_LOWER
+    assert state.attributes[ATTR_LOWER] == float(
+        config[Platform.BINARY_SENSOR][CONF_LOWER]
+    )
+    assert state.state == STATE_OFF
+
+    hass.states.async_set(""sensor.test_monitored"", -3)
+    await hass.async_block_till_done()
+    state = hass.states.get(""binary_sensor.threshold"")
+    assert state.state == STATE_ON",,,,,,
+R31,test_user_flow_error_can_be_corrected,"async def test_user_flow_error_can_be_corrected(hass: HomeAssistant) -> None:
+    """"""After the error, supplying a limit completes the flow.""""""
+    result = await hass.config_entries.flow.async_init(
+        DOMAIN, context={""source"": SOURCE_USER}
+    )
+    result = await hass.config_entries.flow.async_configure(
+        result[""flow_id""], {CONF_NAME: ""Fix"", CONF_ENTITY_ID: SENSOR}
+    )
+    assert result[""errors""] == {""base"": ""need_lower_upper""}
+    with patch(
+        ""homeassistant.components.threshold.async_setup_entry"", return_value=True
+    ):
+        result = await hass.config_entries.flow.async_configure(
+            result[""flow_id""],
+            {CONF_NAME: ""Fix"", CONF_ENTITY_ID: SENSOR, ""lower"": 0},
+        )
+        await hass.async_block_till_done()
+    assert result[""type""] is FlowResultType.CREATE_ENTRY
+    assert result[""options""][""lower""] == 0",,,,,,
+R32,test_migrate_minor_1_removes_helper_devices_for_source_device,"async def test_migrate_minor_1_removes_helper_devices_for_source_device(
+    hass: HomeAssistant,
+) -> None:
+    """"""Migrating from minor 1 removes helper devices of the source device.""""""
+    entry = _make_entry(minor_version=1)
+    entry.add_to_hass(hass)
+    with (
+        patch(
+            ""homeassistant.components.threshold.async_entity_id_to_device_id"",
+            return_value=""device123"",
+        ),
+        patch(
+            ""homeassistant.components.threshold.async_remove_helper_devices""
+        ) as remove,
+    ):
+        assert await async_migrate_entry(hass, entry) is True
+
+    remove.assert_called_once_with(
+        hass, helper_config_entry_id=entry.entry_id, source_device_id=""device123""
+    )
+    assert entry.minor_version == 2","def _make_entry(
+    *,
+    version: int = 1,
+    minor_version: int = 2,
+    options: dict | None = None,
+    entity_id: str = SOURCE,
+) -> MockConfigEntry:
+    """"""Create a threshold config entry (upper threshold 15 by default).""""""
+    if options is None:
+        options = {
+            CONF_ENTITY_ID: entity_id,
+            CONF_HYSTERESIS: 0.0,
+            CONF_LOWER: None,
+            CONF_UPPER: 15.0,
+        }
+    return MockConfigEntry(
+        domain=DOMAIN,
+        title=""Test"",
+        version=version,
+        minor_version=minor_version,
+        options=options,
+    )",,,,,
+R33,test_async_handle_source_entity_changes_source_entity_removed,"async def test_async_handle_source_entity_changes_source_entity_removed(
+    hass: HomeAssistant,
+    device_registry: dr.DeviceRegistry,
+    entity_registry: er.EntityRegistry,
+    threshold_config_entry: MockConfigEntry,
+    sensor_config_entry: ConfigEntry,
+    sensor_device: dr.DeviceEntry,
+    sensor_entity_entry: er.RegistryEntry,
+) -> None:
+    """"""Test the threshold config entry is removed when the source entity is removed.""""""
+    assert await hass.config_entries.async_setup(threshold_config_entry.entry_id)
+    await hass.async_block_till_done()
+
+    threshold_entity_entry = entity_registry.async_get(
+        ""binary_sensor.mock_title_my_threshold""
+    )
+    assert threshold_entity_entry.device_id == sensor_entity_entry.device_id
+
+    sensor_device = device_registry.async_get(sensor_device.id)
+    assert sensor_device.config_entry_id != threshold_config_entry.entry_id
+
+    events = track_entity_registry_actions(hass, threshold_entity_entry.entity_id)
+
+    # Remove the source device, this removes the source sensor
+    with patch(
+        ""homeassistant.components.threshold.async_unload_entry"",
+        wraps=threshold.async_unload_entry,
+    ) as mock_unload_entry:
+        device_registry.async_remove_device(sensor_device.id)
+        await hass.async_block_till_done()
+        await hass.async_block_till_done()
+    mock_unload_entry.assert_not_called()
+
+    # Check that the entity is no longer linked to the source device
+    threshold_entity_entry = entity_registry.async_get(
+        ""binary_sensor.mock_title_my_threshold""
+    )
+    assert threshold_entity_entry.device_id is None
+
+    # Check that the device is removed
+    assert not device_registry.async_get(sensor_device.id)
+
+    # Check that the threshold config entry is not removed
+    assert threshold_config_entry.entry_id in hass.config_entries.async_entry_ids()
+
+    # Check we got the expected events
+    assert events == [""update""]","@pytest.fixture
+def sensor_config_entry(hass: HomeAssistant) -> er.RegistryEntry:
+    """"""Fixture to create a sensor config entry.""""""
+    sensor_config_entry = MockConfigEntry()
+    sensor_config_entry.add_to_hass(hass)
+    return sensor_config_entry
+
+@pytest.fixture
+def sensor_device(
+    device_registry: dr.DeviceRegistry, sensor_config_entry: ConfigEntry
+) -> dr.DeviceEntry:
+    """"""Fixture to create a sensor device.""""""
+    return device_registry.async_get_or_create(
+        config_entry_id=sensor_config_entry.entry_id,
+        connections={(dr.CONNECTION_NETWORK_MAC, ""12:34:56:AB:CD:EF"")},
+    )
+
+@pytest.fixture
+def sensor_entity_entry(
+    entity_registry: er.EntityRegistry,
+    sensor_config_entry: ConfigEntry,
+    sensor_device: dr.DeviceEntry,
+) -> er.RegistryEntry:
+    """"""Fixture to create a sensor entity entry.""""""
+    return entity_registry.async_get_or_create(
+        ""sensor"",
+        ""test"",
+        ""unique"",
+        config_entry=sensor_config_entry,
+        device_id=sensor_device.id,
+        original_name=""ABC"",
+    )
+
+@pytest.fixture
+def threshold_config_entry(
+    hass: HomeAssistant,
+    sensor_entity_entry: er.RegistryEntry,
+) -> MockConfigEntry:
+    """"""Fixture to create a threshold config entry.""""""
+    config_entry = MockConfigEntry(
+        data={},
+        domain=DOMAIN,
+        options={
+            ""entity_id"": sensor_entity_entry.entity_id,
+            ""hysteresis"": 0.0,
+            ""lower"": -2.0,
+            ""name"": ""My threshold"",
+            ""upper"": None,
+        },
+        title=""My threshold"",
+        version=ConfigFlowHandler.VERSION,
+        minor_version=ConfigFlowHandler.MINOR_VERSION,
+    )
+
+    config_entry.add_to_hass(hass)
+
+    return config_entry
+
+def track_entity_registry_actions(hass: HomeAssistant, entity_id: str) -> list[str]:
+    """"""Track entity registry actions for an entity.""""""
+    events = []
+
+    @callback
+    def add_event(event: Event[er.EventEntityRegistryUpdatedData]) -> None:
+        """"""Add entity registry updated event to the list.""""""
+        events.append(event.data[""action""])
+
+    async_track_entity_registry_updated_event(hass, entity_id, add_event)
+
+    return events",,,,,
+R34,test_config_flow,"async def test_config_flow(hass: HomeAssistant) -> None:
+    """"""Test the config flow.""""""
+    input_sensor = ""sensor.input""
+
+    result = await hass.config_entries.flow.async_init(
+        DOMAIN, context={""source"": config_entries.SOURCE_USER}
+    )
+    assert result[""type""] is FlowResultType.FORM
+    assert result[""errors""] is None
+
+    with patch(
+        ""homeassistant.components.threshold.async_setup_entry"",
+        return_value=True,
+    ) as mock_setup_entry:
+        result = await hass.config_entries.flow.async_configure(
+            result[""flow_id""],
+            {
+                ""entity_id"": input_sensor,
+                ""lower"": -2,
+                ""upper"": 0.0,
+                ""name"": ""My threshold sensor"",
+            },
+        )
+        await hass.async_block_till_done()
+
+    assert result[""type""] is FlowResultType.CREATE_ENTRY
+    assert result[""title""] == ""My threshold sensor""
+    assert result[""data""] == {}
+    assert result[""options""] == {
+        ""entity_id"": input_sensor,
+        ""hysteresis"": 0.0,
+        ""lower"": -2.0,
+        ""name"": ""My threshold sensor"",
+        ""upper"": 0.0,
+    }
+    assert len(mock_setup_entry.mock_calls) == 1
+
+    config_entry = hass.config_entries.async_entries(DOMAIN)[0]
+    assert config_entry.data == {}
+    assert config_entry.options == {
+        ""entity_id"": input_sensor,
+        ""hysteresis"": 0.0,
+        ""lower"": -2.0,
+        ""name"": ""My threshold sensor"",
+        ""upper"": 0.0,
+    }
+    assert config_entry.title == ""My threshold sensor""",,,,,,
+R35,test_migration_from_future_version,"async def test_migration_from_future_version(
+    hass: HomeAssistant,
+) -> None:
+    """"""Test migration from future version.""""""
+    config_entry = MockConfigEntry(
+        data={},
+        domain=DOMAIN,
+        options={
+            ""entity_id"": ""sensor.test"",
+            ""hysteresis"": 0.0,
+            ""lower"": -2.0,
+            ""name"": ""My threshold"",
+            ""upper"": None,
+        },
+        title=""My threshold"",
+        version=2,
+        minor_version=1,
+    )
+    config_entry.add_to_hass(hass)
+    await hass.config_entries.async_setup(config_entry.entry_id)
+    await hass.async_block_till_done()
+
+    assert config_entry.state is ConfigEntryState.MIGRATION_ERROR",,,,,,
+R36,test_setup_entry_creates_binary_sensor,"async def test_setup_entry_creates_binary_sensor(hass: HomeAssistant) -> None:
+    """"""Setting up the entry creates a binary sensor reflecting the source.""""""
+    hass.states.async_set(SOURCE, ""25"")
+    entry = _entry()
+    await _setup(hass, entry)
+
+    assert entry.state is ConfigEntryState.LOADED
+    state = hass.states.get(BINARY)
+    assert state is not None
+    assert state.state == ""on""
+    assert state.attributes[""type""] == ""upper""","def _entry(
+    *, version: int = 1, minor_version: int = 2, source: str = SOURCE
+) -> MockConfigEntry:
+    return MockConfigEntry(
+        domain=DOMAIN,
+        title=""My threshold"",
+        version=version,
+        minor_version=minor_version,
+        options={
+            ""entity_id"": source,
+            ""hysteresis"": 0.0,
+            ""lower"": None,
+            ""upper"": 20.0,
+        },
+    )
+
+async def _setup(hass: HomeAssistant, entry: MockConfigEntry) -> None:
+    entry.add_to_hass(hass)
+    assert await hass.config_entries.async_setup(entry.entry_id)
+    await hass.async_block_till_done()",,,,,
+R37,test_lower_hysteresis_latches,"async def test_lower_hysteresis_latches(hass: HomeAssistant) -> None:
+    """"""Hysteresis keeps a lower sensor on until value exceeds lower plus hysteresis.""""""
+    hass.states.async_set(SOURCE, ""17"")
+    await _setup_yaml(hass, lower=20, hysteresis=2)
+    _assert_state(hass, ""on"", ""below"")
+    await _set_source(hass, ""19"")
+    _assert_state(hass, ""on"", ""below"")
+    await _set_source(hass, ""22"")
+    _assert_state(hass, ""on"", ""below"")
+    await _set_source(hass, ""23"")
+    _assert_state(hass, ""off"", ""above"")","async def _setup_yaml(hass: HomeAssistant, **options) -> None:
+    """"""Set up a threshold binary sensor from YAML.""""""
+    config = {""platform"": DOMAIN, ""entity_id"": SOURCE, **options}
+    assert await async_setup_component(hass, ""binary_sensor"", {""binary_sensor"": config})
+    await hass.async_block_till_done()
+
+async def _set_source(hass: HomeAssistant, value) -> None:
+    """"""Set the source sensor state.""""""
+    hass.states.async_set(SOURCE, value)
+    await hass.async_block_till_done()
+
+def _assert_state(hass: HomeAssistant, state: str, position: str) -> None:
+    """"""Assert threshold state and position attribute.""""""
+    st = hass.states.get(ENTITY)
+    assert st is not None
+    assert st.state == state
+    assert st.attributes[""position""] == position",,,,,
+R38,test_sensor_upper,"@pytest.mark.parametrize(
+    (""vals"", ""expected_position"", ""expected_state""),
+    [
+        ([15], POSITION_BELOW, STATE_OFF),  # at threshold
+        ([15, 16], POSITION_ABOVE, STATE_ON),
+        ([15, 16, 14], POSITION_BELOW, STATE_OFF),
+        ([15, 16, 14, 15], POSITION_BELOW, STATE_OFF),  # below -> threshold
+        ([15, 16, 14, 15, ""cat""], POSITION_UNKNOWN, STATE_UNKNOWN),
+        ([15, 16, 14, 15, ""cat"", 15], POSITION_BELOW, STATE_OFF),
+        ([15, None], POSITION_UNKNOWN, STATE_UNKNOWN),
+    ],
+)
+async def test_sensor_upper(
+    hass: HomeAssistant,
+    vals: list[float | str | None],
+    expected_position: str,
+    expected_state: str,
+) -> None:
+    """"""Test if source is above threshold.""""""
+    config = {
+        Platform.BINARY_SENSOR: {
+            CONF_PLATFORM: ""threshold"",
+            CONF_UPPER: ""15"",
+            CONF_ENTITY_ID: ""sensor.test_monitored"",
+        }
+    }
+
+    assert await async_setup_component(hass, BINARY_SENSOR_DOMAIN, config)
+    await hass.async_block_till_done()
+
+    state = hass.states.get(""binary_sensor.threshold"")
+    assert state.attributes[ATTR_ENTITY_ID] == ""sensor.test_monitored""
+    assert state.attributes[ATTR_UPPER] == float(
+        config[Platform.BINARY_SENSOR][CONF_UPPER]
+    )
+    assert state.attributes[ATTR_HYSTERESIS] == 0.0
+    assert state.attributes[ATTR_TYPE] == TYPE_UPPER
+
+    for val in vals:
+        hass.states.async_set(""sensor.test_monitored"", val)
+        await hass.async_block_till_done()
+    state = hass.states.get(""binary_sensor.threshold"")
+    assert state.attributes[ATTR_POSITION] == expected_position
+    assert state.state == expected_state",,,,,,
+R39,test_flow_definitions,"def test_flow_definitions() -> None:
+    """"""Flow steps are declared with the threshold preview and versions.""""""
+    assert CONFIG_FLOW[""user""].preview == ""threshold""
+    assert OPTIONS_FLOW[""init""].preview == ""threshold""
+    assert ConfigFlowHandler.MINOR_VERSION == 2
+    assert ConfigFlowHandler.options_flow_reloads is True",,,,,,
+R40,test_extra_state_attributes_upper_only,"async def test_extra_state_attributes_upper_only(hass: HomeAssistant) -> None:
+    """"""Attributes expose configuration and the sensor value.""""""
+    hass.states.async_set(SOURCE, ""12.5"")
+    await _setup_yaml(hass, upper=10, hysteresis=0.5)
+    attrs = hass.states.get(ENTITY).attributes
+    assert attrs[""entity_id""] == SOURCE
+    assert attrs[""hysteresis""] == 0.5
+    assert attrs[""lower""] is None
+    assert attrs[""upper""] == 10.0
+    assert attrs[""type""] == ""upper""
+    assert attrs[""sensor_value""] == 12.5
+    assert attrs[""position""] == ""above""","async def _setup_yaml(hass: HomeAssistant, **options) -> None:
+    """"""Set up a threshold binary sensor from YAML.""""""
+    config = {""platform"": DOMAIN, ""entity_id"": SOURCE, **options}
+    assert await async_setup_component(hass, ""binary_sensor"", {""binary_sensor"": config})
+    await hass.async_block_till_done()",,,,,
+R41,test_validate_mode_rejects_missing_limits,"async def test_validate_mode_rejects_missing_limits() -> None:
+    """"""Input with neither lower nor upper raises a SchemaFlowError.""""""
+    with pytest.raises(SchemaFlowError) as err:
+        await _validate_mode(None, {""hysteresis"": 0.0})
+    assert str(err.value) == ""need_lower_upper""",,,,,,
+R42,test_user_flow_shows_form,"async def test_user_flow_shows_form(hass: HomeAssistant) -> None:
+    """"""Starting the flow shows the user form.""""""
+    result = await _start_user_flow(hass)
+    assert result[""type""] is FlowResultType.FORM
+    assert result[""step_id""] == ""user""","async def _start_user_flow(hass: HomeAssistant):
+    """"""Start the user config flow.""""""
+    return await hass.config_entries.flow.async_init(
+        DOMAIN, context={""source"": config_entries.SOURCE_USER}
+    )",,,,,
+R43,test_platform_schema_requires_entity_id,"def test_platform_schema_requires_entity_id() -> None:
+    """"""The schema fails without entity_id.""""""
+    with pytest.raises(probatio.Invalid):
+        PLATFORM_SCHEMA({""platform"": ""threshold"", ""upper"": 1})",,,,,,
+R44,test_options_flow_sensor_preview_config_entry_removed,"async def test_options_flow_sensor_preview_config_entry_removed(
+    hass: HomeAssistant, hass_ws_client: WebSocketGenerator
+) -> None:
+    """"""Test the option flow preview where the config entry is removed.""""""
+    client = await hass_ws_client(hass)
+
+    # Setup the config entry
+    config_entry = MockConfigEntry(
+        data={},
+        domain=DOMAIN,
+        options={
+            ""entity_id"": ""sensor.test_monitored"",
+            ""hysteresis"": 0.0,
+            ""lower"": 20.0,
+            ""name"": ""Test Sensor"",
+            ""upper"": None,
+        },
+        title=""Test Sensor"",
+    )
+    config_entry.add_to_hass(hass)
+    assert await hass.config_entries.async_setup(config_entry.entry_id)
+    await hass.async_block_till_done()
+
+    result = await hass.config_entries.options.async_init(config_entry.entry_id)
+    assert result[""type""] is FlowResultType.FORM
+    assert result[""errors""] is None
+    assert result[""preview""] == ""threshold""
+
+    await hass.config_entries.async_remove(config_entry.entry_id)
+
+    await client.send_json_auto_id(
+        {
+            ""type"": ""threshold/start_preview"",
+            ""flow_id"": result[""flow_id""],
+            ""flow_type"": ""options_flow"",
+            ""user_input"": {
+                ""name"": ""Test Sensor"",
+                ""entity_id"": ""sensor.test_monitored"",
+                ""hysteresis"": 0.0,
+                ""lower"": 20.0,
+            },
+        }
+    )
+    msg = await client.receive_json()
+    assert not msg[""success""]
+    assert msg[""error""] == {
+        ""code"": ""home_assistant_error"",
+        ""message"": ""Config entry not found"",
+    }",,,,,,
+R45,test_preview_options_flow_uses_entry,"async def test_preview_options_flow_uses_entry(
+    hass: HomeAssistant, hass_ws_client
+) -> None:
+    """"""The options-flow preview reads entity and name from the config entry.""""""
+    assert await async_setup_component(hass, ""config"", {})
+    hass.states.async_set(SENSOR, ""5"")
+    entry = await _make_entry(hass)
+    client = await hass_ws_client(hass)
+    result = await hass.config_entries.options.async_init(entry.entry_id)
+    await client.send_json_auto_id(
+        {
+            ""type"": ""threshold/start_preview"",
+            ""flow_id"": result[""flow_id""],
+            ""flow_type"": ""options_flow"",
+            ""user_input"": {""entity_id"": SENSOR, ""upper"": 4.0},
+        }
+    )
+    assert (await client.receive_json())[""success""]
+    msg = await client.receive_json()
+    assert msg[""event""][""state""] == ""on""
+    assert msg[""event""][""attributes""][""entity_id""] == SENSOR","async def _make_entry(hass: HomeAssistant, **extra) -> MockConfigEntry:
+    """"""Create an entry (not set up).""""""
+    options = {
+        ""name"": ""My threshold"",
+        ""entity_id"": SENSOR,
+        ""hysteresis"": 0.0,
+        ""lower"": None,
+        ""upper"": 10.0,
+        **extra,
+    }
+    entry = MockConfigEntry(
+        domain=DOMAIN,
+        options=options,
+        title=options[""name""],
+        version=1,
+        minor_version=2,
+    )
+    entry.add_to_hass(hass)
+    return entry",,,,,
+R46,test_sensor_lower_hysteresis,"@pytest.mark.parametrize(
+    (""vals"", ""expected_position"", ""expected_state""),
+    [
+        ([17.5], POSITION_ABOVE, STATE_OFF),  # threshold + hysteresis
+        ([17.5, 12.5], POSITION_ABOVE, STATE_OFF),  # threshold - hysteresis
+        ([17.5, 12.5, 20], POSITION_ABOVE, STATE_OFF),
+        ([17.5, 12.5, 20, 13], POSITION_ABOVE, STATE_OFF),
+        ([17.5, 12.5, 20, 13, 12], POSITION_BELOW, STATE_ON),
+        ([17.5, 12.5, 20, 13, 12, 17], POSITION_BELOW, STATE_ON),
+        ([17.5, 12.5, 20, 13, 12, 17, 18], POSITION_ABOVE, STATE_OFF),
+        ([17.5, 12.5, 20, 13, 12, 17, 18, ""cat""], POSITION_UNKNOWN, STATE_UNKNOWN),
+        ([17.5, 12.5, 20, 13, 12, 17, 18, ""cat"", 18], POSITION_ABOVE, STATE_OFF),
+        ([18, None], POSITION_UNKNOWN, STATE_UNKNOWN),
+        # below within -> above
+        ([14, 17.6], POSITION_ABOVE, STATE_OFF),
+        # above within -> below
+        ([16, 12.4], POSITION_BELOW, STATE_ON),
+        # below within -> above within
+        ([14, 16], POSITION_ABOVE, STATE_OFF),
+        # above within -> below within
+        ([16, 14], POSITION_ABOVE, STATE_OFF),
+        # above -> above within -> below within
+        ([20, 16, 14], POSITION_ABOVE, STATE_OFF),
+        # below -> below within -> above within
+        ([10, 14, 16], POSITION_BELOW, STATE_ON),
+    ],
+)
+async def test_sensor_lower_hysteresis(
+    hass: HomeAssistant,
+    vals: list[float | str | None],
+    expected_position: str,
+    expected_state: str,
+) -> None:
+    """"""Test if source is below threshold using hysteresis.""""""
+    config = {
+        Platform.BINARY_SENSOR: {
+            CONF_PLATFORM: ""threshold"",
+            CONF_LOWER: ""15"",
+            CONF_HYSTERESIS: ""2.5"",
+            CONF_ENTITY_ID: ""sensor.test_monitored"",
+        }
+    }
+
+    assert await async_setup_component(hass, BINARY_SENSOR_DOMAIN, config)
+    await hass.async_block_till_done()
+
+    state = hass.states.get(""binary_sensor.threshold"")
+    assert state.attributes[ATTR_ENTITY_ID] == ""sensor.test_monitored""
+    assert state.attributes[ATTR_LOWER] == float(
+        config[Platform.BINARY_SENSOR][CONF_LOWER]
+    )
+    assert state.attributes[ATTR_HYSTERESIS] == 2.5
+    assert state.attributes[ATTR_TYPE] == TYPE_LOWER
+
+    for val in vals:
+        hass.states.async_set(""sensor.test_monitored"", val)
+        await hass.async_block_till_done()
+    state = hass.states.get(""binary_sensor.threshold"")
+    assert state.attributes[ATTR_POSITION] == expected_position
+    assert state.state == expected_state",,,,,,
+R47,test_migrate_minor_version_1_to_2_updates_version,"async def test_migrate_minor_version_1_to_2_updates_version(
+    hass: HomeAssistant,
+) -> None:
+    """"""Migrating a 1.1 entry bumps it to minor version 2.""""""
+    entry = _make_entry(minor_version=1)
+    entry.add_to_hass(hass)
+
+    assert await async_migrate_entry(hass, entry) is True
+
+    assert entry.version == 1
+    assert entry.minor_version == 2","def _make_entry(
+    entity_id: str = SOURCE,
+    minor_version: int = 2,
+    lower: float | None = None,
+    upper: float | None = 10.0,
+) -> MockConfigEntry:
+    return MockConfigEntry(
+        domain=DOMAIN,
+        title=""Test"",
+        data={},
+        options={
+            CONF_ENTITY_ID: entity_id,
+            CONF_HYSTERESIS: 0.0,
+            CONF_LOWER: lower,
+            CONF_UPPER: upper,
+        },
+        version=1,
+        minor_version=minor_version,
+    )",,,,,
+R48,test_unload_entry_returns_true_for_loaded_entry,"async def test_unload_entry_returns_true_for_loaded_entry(
+    hass: HomeAssistant,
+) -> None:
+    """"""Async_unload_entry returns True for a loaded entry.""""""
+    hass.states.async_set(SOURCE, ""5"")
+    entry = _make_entry()
+    await _setup(hass, entry)
+
+    assert await async_unload_entry(hass, entry) is True","def _make_entry(
+    entity_id: str = SOURCE,
+    minor_version: int = 2,
+    lower: float | None = None,
+    upper: float | None = 10.0,
+) -> MockConfigEntry:
+    return MockConfigEntry(
+        domain=DOMAIN,
+        title=""Test"",
+        data={},
+        options={
+            CONF_ENTITY_ID: entity_id,
+            CONF_HYSTERESIS: 0.0,
+            CONF_LOWER: lower,
+            CONF_UPPER: upper,
+        },
+        version=1,
+        minor_version=minor_version,
+    )
+
+async def _setup(hass: HomeAssistant, entry: MockConfigEntry) -> None:
+    entry.add_to_hass(hass)
+    await hass.config_entries.async_setup(entry.entry_id)
+    await hass.async_block_till_done()",,,,,
+R49,test_preview_non_numeric_state_is_unknown,"async def test_preview_non_numeric_state_is_unknown(
+    hass: HomeAssistant, hass_ws_client
+) -> None:
+    """"""A non-numeric source state gives a preview with no sensor value.""""""
+    assert await async_setup_component(hass, ""config"", {})
+    hass.states.async_set(SENSOR, ""abc"")
+    client = await hass_ws_client(hass)
+    result = await _start(hass)
+    await client.send_json_auto_id(
+        {
+            ""type"": ""threshold/start_preview"",
+            ""flow_id"": result[""flow_id""],
+            ""flow_type"": ""config_flow"",
+            ""user_input"": {""name"": ""P"", ""entity_id"": SENSOR, ""upper"": 4.0},
+        }
+    )
+    assert (await client.receive_json())[""success""]
+    msg = await client.receive_json()
+    assert msg[""event""][""attributes""][""sensor_value""] is None
+    assert msg[""event""][""attributes""][""position""] == ""unknown""","async def _start(hass: HomeAssistant):
+    """"""Start the user flow.""""""
+    return await hass.config_entries.flow.async_init(
+        DOMAIN, context={""source"": SOURCE_USER}
+    )",,,,,
+R50,test_async_handle_source_entity_changes_source_entity_removed_from_device,"async def test_async_handle_source_entity_changes_source_entity_removed_from_device(
+    hass: HomeAssistant,
+    device_registry: dr.DeviceRegistry,
+    entity_registry: er.EntityRegistry,
+    threshold_config_entry: MockConfigEntry,
+    sensor_device: dr.DeviceEntry,
+    sensor_entity_entry: er.RegistryEntry,
+) -> None:
+    """"""Test the source entity removed from the source device.""""""
+    assert await hass.config_entries.async_setup(threshold_config_entry.entry_id)
+    await hass.async_block_till_done()
+
+    threshold_entity_entry = entity_registry.async_get(
+        ""binary_sensor.mock_title_my_threshold""
+    )
+    assert threshold_entity_entry.device_id == sensor_entity_entry.device_id
+
+    sensor_device = device_registry.async_get(sensor_device.id)
+    assert sensor_device.config_entry_id != threshold_config_entry.entry_id
+
+    events = track_entity_registry_actions(hass, threshold_entity_entry.entity_id)
+
+    # Remove the source sensor from the device
+    with patch(
+        ""homeassistant.components.threshold.async_unload_entry"",
+        wraps=threshold.async_unload_entry,
+    ) as mock_unload_entry:
+        entity_registry.async_update_entity(
+            sensor_entity_entry.entity_id, device_id=None
+        )
+        await hass.async_block_till_done()
+    mock_unload_entry.assert_called_once()
+
+    # Check that the entity is no longer linked to the source device
+    threshold_entity_entry = entity_registry.async_get(
+        ""binary_sensor.mock_title_my_threshold""
+    )
+    assert threshold_entity_entry.device_id is None
+
+    # Check that the threshold config entry is not in the device
+    sensor_device = device_registry.async_get(sensor_device.id)
+    assert sensor_device.config_entry_id != threshold_config_entry.entry_id
+
+    # Check that the threshold config entry is not removed
+    assert threshold_config_entry.entry_id in hass.config_entries.async_entry_ids()
+
+    # Check we got the expected events
+    assert events == [""update""]","@pytest.fixture
+def sensor_device(
+    device_registry: dr.DeviceRegistry, sensor_config_entry: ConfigEntry
+) -> dr.DeviceEntry:
+    """"""Fixture to create a sensor device.""""""
+    return device_registry.async_get_or_create(
+        config_entry_id=sensor_config_entry.entry_id,
+        connections={(dr.CONNECTION_NETWORK_MAC, ""12:34:56:AB:CD:EF"")},
+    )
+
+@pytest.fixture
+def sensor_entity_entry(
+    entity_registry: er.EntityRegistry,
+    sensor_config_entry: ConfigEntry,
+    sensor_device: dr.DeviceEntry,
+) -> er.RegistryEntry:
+    """"""Fixture to create a sensor entity entry.""""""
+    return entity_registry.async_get_or_create(
+        ""sensor"",
+        ""test"",
+        ""unique"",
+        config_entry=sensor_config_entry,
+        device_id=sensor_device.id,
+        original_name=""ABC"",
+    )
+
+@pytest.fixture
+def threshold_config_entry(
+    hass: HomeAssistant,
+    sensor_entity_entry: er.RegistryEntry,
+) -> MockConfigEntry:
+    """"""Fixture to create a threshold config entry.""""""
+    config_entry = MockConfigEntry(
+        data={},
+        domain=DOMAIN,
+        options={
+            ""entity_id"": sensor_entity_entry.entity_id,
+            ""hysteresis"": 0.0,
+            ""lower"": -2.0,
+            ""name"": ""My threshold"",
+            ""upper"": None,
+        },
+        title=""My threshold"",
+        version=ConfigFlowHandler.VERSION,
+        minor_version=ConfigFlowHandler.MINOR_VERSION,
+    )
+
+    config_entry.add_to_hass(hass)
+
+    return config_entry
+
+def track_entity_registry_actions(hass: HomeAssistant, entity_id: str) -> list[str]:
+    """"""Track entity registry actions for an entity.""""""
+    events = []
+
+    @callback
+    def add_event(event: Event[er.EventEntityRegistryUpdatedData]) -> None:
+        """"""Add entity registry updated event to the list.""""""
+        events.append(event.data[""action""])
+
+    async_track_entity_registry_updated_event(hass, entity_id, add_event)
+
+    return events",,,,,
+R51,test_non_numeric_source_logs_warning,"async def test_non_numeric_source_logs_warning(
+    hass: HomeAssistant, caplog: pytest.LogCaptureFixture
+) -> None:
+    """"""A non-numeric source state yields unknown and a warning.""""""
+    hass.states.async_set(SOURCE, ""abc"")
+    await _setup_yaml(hass, upper=10)
+    _assert_state(hass, ""unknown"", ""unknown"")
+    assert ""State is not numerical"" in caplog.text","async def _setup_yaml(hass: HomeAssistant, **options) -> None:
+    """"""Set up a threshold binary sensor from YAML.""""""
+    config = {""platform"": DOMAIN, ""entity_id"": SOURCE, **options}
+    assert await async_setup_component(hass, ""binary_sensor"", {""binary_sensor"": config})
+    await hass.async_block_till_done()
+
+def _assert_state(hass: HomeAssistant, state: str, position: str) -> None:
+    """"""Assert threshold state and position attribute.""""""
+    st = hass.states.get(ENTITY)
+    assert st is not None
+    assert st.state == state
+    assert st.attributes[""position""] == position",,,,,
+R52,test_threshold_type_helper_variants,"def test_threshold_type_helper_variants() -> None:
+    """"""The threshold type is derived from which limits are set.""""""
+    assert _threshold_type(1.0, 2.0) == TYPE_RANGE
+    assert _threshold_type(1.0, None) == TYPE_LOWER
+    assert _threshold_type(None, 2.0) == TYPE_UPPER",,,,,,
+R53,test_sensor_in_range_with_hysteresis,"@pytest.mark.parametrize(
+    (""vals"", ""expected_position"", ""expected_state""),
+    [
+        ([12], POSITION_IN_RANGE, STATE_ON),  # lower threshold + hysteresis
+        ([12, 22], POSITION_IN_RANGE, STATE_ON),  # upper threshold + hysteresis
+        ([12, 22, 18], POSITION_IN_RANGE, STATE_ON),  # upper threshold - hysteresis
+        ([12, 22, 18, 16], POSITION_IN_RANGE, STATE_ON),
+        ([12, 22, 18, 16, 8], POSITION_IN_RANGE, STATE_ON),
+        ([12, 22, 18, 16, 8, 7], POSITION_BELOW, STATE_OFF),
+        ([12, 22, 18, 16, 8, 7, 12], POSITION_BELOW, STATE_OFF),
+        ([12, 22, 18, 16, 8, 7, 12, 13], POSITION_IN_RANGE, STATE_ON),
+        ([12, 22, 18, 16, 8, 7, 12, 13, 22], POSITION_IN_RANGE, STATE_ON),
+        ([12, 22, 18, 16, 8, 7, 12, 13, 22, 23], POSITION_ABOVE, STATE_OFF),
+        ([12, 22, 18, 16, 8, 7, 12, 13, 22, 23, 18], POSITION_ABOVE, STATE_OFF),
+        ([12, 22, 18, 16, 8, 7, 12, 13, 22, 23, 18, 17], POSITION_IN_RANGE, STATE_ON),
+        (
+            [12, 22, 18, 16, 8, 7, 12, 13, 22, 23, 18, 17, ""cat""],
+            POSITION_UNKNOWN,
+            STATE_UNKNOWN,
+        ),
+        (
+            [12, 22, 18, 16, 8, 7, 12, 13, 22, 23, 18, 17, ""cat"", 17],
+            POSITION_IN_RANGE,
+            STATE_ON,
+        ),
+        ([17, None], POSITION_UNKNOWN, STATE_UNKNOWN),
+        # upper threshold -> lower threshold
+        ([20, 10], POSITION_IN_RANGE, STATE_ON),
+        # in-range -> upper threshold
+        ([15, 20], POSITION_IN_RANGE, STATE_ON),
+        # in-range -> lower threshold
+        ([15, 10], POSITION_IN_RANGE, STATE_ON),
+        # below -> above
+        ([5, 25], POSITION_ABOVE, STATE_OFF),
+        # above -> below
+        ([25, 5], POSITION_BELOW, STATE_OFF),
+        # in-range -> above
+        ([15, 25], POSITION_ABOVE, STATE_OFF),
+        # in-range -> below
+        ([15, 5], POSITION_BELOW, STATE_OFF),
+        # below -> lower threshold
+        ([5, 10], POSITION_BELOW, STATE_OFF),
+        # below -> in-range -> lower threshold
+        ([5, 15, 10], POSITION_IN_RANGE, STATE_ON),
+        # above -> upper threshold
+        ([25, 20], POSITION_ABOVE, STATE_OFF),
+        # above -> in-range -> upper threshold
+        ([25, 15, 20], POSITION_IN_RANGE, STATE_ON),
+        ([15, 22.1], POSITION_ABOVE, STATE_OFF),  # in-range -> above hysteresis edge
+        ([15, 7.9], POSITION_BELOW, STATE_OFF),  # in-range -> below hysteresis edge
+        ([7, 11.9], POSITION_BELOW, STATE_OFF),
+        ([23, 18.1], POSITION_ABOVE, STATE_OFF),
+    ],
+)
+async def test_sensor_in_range_with_hysteresis(
+    hass: HomeAssistant,
+    vals: list[float | str | None],
+    expected_position: str,
+    expected_state: str,
+) -> None:
+    """"""Test if source is within the range.""""""
+    config = {
+        Platform.BINARY_SENSOR: {
+            CONF_PLATFORM: ""threshold"",
+            CONF_LOWER: ""10"",
+            CONF_UPPER: ""20"",
+            CONF_HYSTERESIS: ""2"",
+            CONF_ENTITY_ID: ""sensor.test_monitored"",
+        }
+    }
+
+    assert await async_setup_component(hass, BINARY_SENSOR_DOMAIN, config)
+    await hass.async_block_till_done()
+
+    state = hass.states.get(""binary_sensor.threshold"")
+    assert state.attributes[ATTR_ENTITY_ID] == ""sensor.test_monitored""
+    assert state.attributes[ATTR_LOWER] == float(
+        config[Platform.BINARY_SENSOR][CONF_LOWER]
+    )
+    assert state.attributes[ATTR_UPPER] == float(
+        config[Platform.BINARY_SENSOR][CONF_UPPER]
+    )
+    assert state.attributes[ATTR_HYSTERESIS] == 2.0
+    assert state.attributes[ATTR_TYPE] == TYPE_RANGE
+
+    for val in vals:
+        hass.states.async_set(""sensor.test_monitored"", val)
+        await hass.async_block_till_done()
+    state = hass.states.get(""binary_sensor.threshold"")
+    assert state.attributes[ATTR_POSITION] == expected_position
+    assert state.state == expected_state",,,,,,
+R54,test_extra_state_attributes_missing_limit_is_none,"async def test_extra_state_attributes_missing_limit_is_none(
+    hass: HomeAssistant,
+) -> None:
+    """"""The unset limit is reported as None.""""""
+    await _setup_yaml(hass, upper=20, name=""threshold"")
+    await _set(hass, 1)
+    attrs = hass.states.get(BINARY).attributes
+    assert attrs[""lower""] is None
+    assert attrs[""type""] == TYPE_UPPER","async def _setup_yaml(hass: HomeAssistant, **extra) -> None:
+    """"""Set up the platform from YAML.""""""
+    config = {
+        ""binary_sensor"": {
+            ""platform"": ""threshold"",
+            ""entity_id"": SOURCE,
+            **extra,
+        }
+    }
+    assert await async_setup_component(hass, ""binary_sensor"", config)
+    await hass.async_block_till_done()
+
+async def _set(hass: HomeAssistant, value) -> None:
+    """"""Set the source state.""""""
+    hass.states.async_set(SOURCE, value)
+    await hass.async_block_till_done()",,,,,
+R55,test_options_flow_updates_limits,"async def test_options_flow_updates_limits(hass: HomeAssistant) -> None:
+    """"""Submitting the options flow updates the stored options.""""""
+    entry = _make_entry()
+    entry.add_to_hass(hass)
+    with patch(
+        ""homeassistant.components.threshold.async_setup_entry"", return_value=True
+    ):
+        assert await hass.config_entries.async_setup(entry.entry_id)
+        await hass.async_block_till_done()
+        result = await hass.config_entries.options.async_init(entry.entry_id)
+        result = await hass.config_entries.options.async_configure(
+            result[""flow_id""],
+            {
+                CONF_ENTITY_ID: SOURCE,
+                CONF_HYSTERESIS: 1.0,
+                CONF_UPPER: 20.0,
+            },
+        )
+        await hass.async_block_till_done()
+    assert result[""type""] is FlowResultType.CREATE_ENTRY
+    assert entry.options[CONF_UPPER] == 20.0
+    assert entry.options[CONF_LOWER] is None
+    assert entry.options[CONF_HYSTERESIS] == 1.0
+    assert entry.options[CONF_NAME] == ""My threshold""","def _make_entry(options: dict | None = None) -> MockConfigEntry:
+    """"""Create a mock config entry.""""""
+    opts = {
+        CONF_ENTITY_ID: SOURCE,
+        CONF_HYSTERESIS: 0.0,
+        CONF_LOWER: 5.0,
+        CONF_UPPER: None,
+        CONF_NAME: ""My threshold"",
+    }
+    if options:
+        opts.update(options)
+    return MockConfigEntry(
+        data={},
+        domain=DOMAIN,
+        options=opts,
+        title=""My threshold"",
+        version=1,
+        minor_version=2,
+    )",,,,,
+R56,test_sensor_lower,"@pytest.mark.parametrize(
+    (""vals"", ""expected_position"", ""expected_state""),
+    [
+        ([15], POSITION_ABOVE, STATE_OFF),  # at threshold
+        ([15, 16], POSITION_ABOVE, STATE_OFF),
+        ([15, 16, 14], POSITION_BELOW, STATE_ON),
+        ([15, 16, 14, 15], POSITION_BELOW, STATE_ON),
+        ([15, 16, 14, 15, ""cat""], POSITION_UNKNOWN, STATE_UNKNOWN),
+        ([15, 16, 14, 15, ""cat"", 15], POSITION_ABOVE, STATE_OFF),
+        ([15, None], POSITION_UNKNOWN, STATE_UNKNOWN),
+    ],
+)
+async def test_sensor_lower(
+    hass: HomeAssistant,
+    vals: list[float | str | None],
+    expected_position: str,
+    expected_state: str,
+) -> None:
+    """"""Test if source is below threshold.""""""
+    config = {
+        Platform.BINARY_SENSOR: {
+            CONF_PLATFORM: ""threshold"",
+            CONF_LOWER: ""15"",
+            CONF_ENTITY_ID: ""sensor.test_monitored"",
+        }
+    }
+
+    assert await async_setup_component(hass, BINARY_SENSOR_DOMAIN, config)
+    await hass.async_block_till_done()
+
+    state = hass.states.get(""binary_sensor.threshold"")
+    assert state.attributes[ATTR_ENTITY_ID] == ""sensor.test_monitored""
+    assert state.attributes[ATTR_LOWER] == float(
+        config[Platform.BINARY_SENSOR][CONF_LOWER]
+    )
+    assert state.attributes[ATTR_HYSTERESIS] == 0.0
+    assert state.attributes[ATTR_TYPE] == TYPE_LOWER
+
+    for val in vals:
+        hass.states.async_set(""sensor.test_monitored"", val)
+        await hass.async_block_till_done()
+    state = hass.states.get(""binary_sensor.threshold"")
+    assert state.attributes[ATTR_POSITION] == expected_position
+    assert state.state == expected_state",,,,,,
+R57,test_platform_schema_defaults_and_coercion,"def test_platform_schema_defaults_and_coercion() -> None:
+    """"""The schema applies defaults and coerces numbers to float.""""""
+    conf = PLATFORM_SCHEMA(
+        {""platform"": ""threshold"", ""entity_id"": SOURCE, ""upper"": ""5""}
+    )
+    assert conf[""upper""] == 5.0
+    assert conf[""hysteresis""] == 0.0
+    assert conf[""name""] == ""Threshold""",,,,,,
+R58,test_hysteresis_lower,"async def test_hysteresis_lower(hass: HomeAssistant) -> None:
+    """"""Hysteresis applies to the lower limit as well.""""""
+    await _setup_yaml(hass, lower=20, hysteresis=2, name=""threshold"")
+    await _set(hass, 19)
+    assert hass.states.get(BINARY).state == STATE_OFF
+    await _set(hass, 17)
+    assert hass.states.get(BINARY).state == STATE_ON
+    await _set(hass, 21)
+    assert hass.states.get(BINARY).state == STATE_ON
+    await _set(hass, 23)
+    assert hass.states.get(BINARY).state == STATE_OFF","async def _setup_yaml(hass: HomeAssistant, **extra) -> None:
+    """"""Set up the platform from YAML.""""""
+    config = {
+        ""binary_sensor"": {
+            ""platform"": ""threshold"",
+            ""entity_id"": SOURCE,
+            **extra,
+        }
+    }
+    assert await async_setup_component(hass, ""binary_sensor"", config)
+    await hass.async_block_till_done()
+
+async def _set(hass: HomeAssistant, value) -> None:
+    """"""Set the source state.""""""
+    hass.states.async_set(SOURCE, value)
+    await hass.async_block_till_done()",,,,,
+R59,test_extra_state_attributes_range,"async def test_extra_state_attributes_range(hass: HomeAssistant) -> None:
+    """"""Attributes expose limits, type, hysteresis and value.""""""
+    await _setup_yaml(hass, lower=10, upper=20, hysteresis=1, name=""threshold"")
+    await _set(hass, 15)
+    attrs = hass.states.get(BINARY).attributes
+    assert attrs[""entity_id""] == SOURCE
+    assert attrs[""lower""] == 10.0
+    assert attrs[""upper""] == 20.0
+    assert attrs[""hysteresis""] == 1.0
+    assert attrs[""type""] == TYPE_RANGE
+    assert attrs[""sensor_value""] == 15.0","async def _setup_yaml(hass: HomeAssistant, **extra) -> None:
+    """"""Set up the platform from YAML.""""""
+    config = {
+        ""binary_sensor"": {
+            ""platform"": ""threshold"",
+            ""entity_id"": SOURCE,
+            **extra,
+        }
+    }
+    assert await async_setup_component(hass, ""binary_sensor"", config)
+    await hass.async_block_till_done()
+
+async def _set(hass: HomeAssistant, value) -> None:
+    """"""Set the source state.""""""
+    hass.states.async_set(SOURCE, value)
+    await hass.async_block_till_done()",,,,,
+R60,test_options_flow_preview,"async def test_options_flow_preview(
+    hass: HomeAssistant,
+    hass_ws_client: WebSocketGenerator,
+    snapshot: SnapshotAssertion,
+) -> None:
+    """"""Test the options flow preview.""""""
+    client = await hass_ws_client(hass)
+
+    # add state for the tests
+    hass.states.async_set(
+        ""sensor.test_monitored"",
+        16,
+        {ATTR_UNIT_OF_MEASUREMENT: UnitOfTemperature.CELSIUS},
+    )
+
+    # Setup the config entry
+    config_entry = MockConfigEntry(
+        data={},
+        domain=DOMAIN,
+        options={
+            ""entity_id"": ""sensor.test_monitored"",
+            ""hysteresis"": 0.0,
+            ""lower"": 20.0,
+            ""name"": ""Test Sensor"",
+            ""upper"": None,
+        },
+        title=""Test Sensor"",
+    )
+    config_entry.add_to_hass(hass)
+    assert await hass.config_entries.async_setup(config_entry.entry_id)
+    await hass.async_block_till_done()
+
+    result = await hass.config_entries.options.async_init(config_entry.entry_id)
+    assert result[""type""] is FlowResultType.FORM
+    assert result[""errors""] is None
+    assert result[""preview""] == ""threshold""
+
+    await client.send_json_auto_id(
+        {
+            ""type"": ""threshold/start_preview"",
+            ""flow_id"": result[""flow_id""],
+            ""flow_type"": ""options_flow"",
+            ""user_input"": {
+                ""name"": ""Test Sensor"",
+                ""entity_id"": ""sensor.test_monitored"",
+                ""hysteresis"": 0.0,
+                ""lower"": 20.0,
+            },
+        }
+    )
+    msg = await client.receive_json()
+    assert msg[""success""]
+    assert msg[""result""] is None
+
+    msg = await client.receive_json()
+    assert msg[""event""] == snapshot
+    assert len(hass.states.async_all()) == 2",,,,,,

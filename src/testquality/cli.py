@@ -180,10 +180,19 @@ def _cmd_relevance(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_review_sample(args: argparse.Namespace) -> int:
+    from .config import load_settings
+    from .review import build_sample
+
+    sample, key = build_sample(load_settings(), args.run, force=args.force)
+    print(f"wrote {sample}\nwrote {key} (do not open until ratings are complete)")
+    return 0
+
+
 IMPLEMENTED: dict[str, object] = {
     "generate": _cmd_generate, "execute": _cmd_execute, "coverage": _cmd_coverage,
     "mutate": _cmd_mutate, "traceability": _cmd_traceability, "smells": _cmd_smells,
-    "relevance": _cmd_relevance,
+    "relevance": _cmd_relevance, "review-sample": _cmd_review_sample,
 }
 
 
@@ -211,6 +220,9 @@ def build_parser() -> argparse.ArgumentParser:
             p.add_argument("--suite", required=True, help="'developer' or a run id")
         if name == "relevance":
             p.add_argument("--suite", required=True, help="'developer' or a run id")
+        if name == "review-sample":
+            p.add_argument("--run", default="main_sonnet55_v1", help="generation run id")
+            p.add_argument("--force", action="store_true", help="overwrite an existing sample")
         if name == "generate":
             p.add_argument("--model", action="append", help="model id (repeatable); default main")
             p.add_argument("--cheap", action="store_true", help="use the cheap model")

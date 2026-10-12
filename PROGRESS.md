@@ -11,7 +11,7 @@ Read `docs/PLAN.md` first. Update this file at the end of every phase.
 | 6 | Traceability | done (docs/metrics.md written first) |
 | 7 | Test smells | done |
 | 8 | Relevance & completeness | done (behaviours.yaml is DRAFT) |
-| 9 | Manual review sample (STOP for user) | todo |
+| 9 | Manual review sample (STOP for user) | sample built; WAITING for user ratings (manual_review/sample_rated.csv) |
 | 10 | Metamorphic experiment | todo |
 | 11 | Results/report.py/make all | todo |
 | 12 | CI | todo |
@@ -31,3 +31,4 @@ Read `docs/PLAN.md` first. Update this file at the end of every phase.
 - Phase 7: `uv run testquality smells --suite developer|<run_id>` -> results/smells_{tests,summary}.csv. Parametrised cases weight each function by its case count (developer file is heavily parametrised: roulette/conditional logic from loops over `vals`).
 - Phase 8: data/behaviours.yaml = 40 behaviours, DRAFT needs human check (ranges for tag 2026.10.1). `uv run testquality relevance --suite <s>` needs results/cache/coverage_<s>.json (run `coverage` first). 38 reachable behaviours (2 module-level excluded); developer completeness 1.0 by construction.
 - NEXT: Phase 9 manual review sample, then STOP and tell the user.
+- Phase 9: manual_review/rubric.md, sample_blinded.csv (60 items: 20 developer, 40 LLM; seed 20261012), key_do_not_open_until_rated.csv. Assistant must NEVER fill ratings. User saves ratings as manual_review/sample_rated.csv. RQ2 stays 'pending manual review' until then. Meanwhile phases 10-12 proceed.

@@ -58,3 +58,15 @@ def test_import_time_lines_and_reachability(tmp_path: Path):
     cache = {"u.py": {"tests": {"t": {"m.py": {"lines": [4, 8, 9, 10]}}}}}
     reach = reachable_behaviours(B, STM, cache, tmp_path)
     assert reach == {"B1", "B2"}  # B3 is module level: excluded although a test "covers" it
+
+
+def test_normalise_docstring_hides_llm_format():
+    from testquality.review import normalise_docstring
+
+    src = (
+        'async def test_a(hass):\n    """Behaviour: renames the entity.\n\n'
+        '    Target: ThresholdSensor.x\n    """\n    assert 1\n'
+    )
+    out = normalise_docstring(src)
+    assert "Behaviour" not in out and "Target" not in out
+    assert '"""Renames the entity."""' in out
