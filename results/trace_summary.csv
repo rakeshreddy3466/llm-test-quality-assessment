@@ -1,0 +1,3 @@
+suite,scope,tests,valid_tests,trace_name_mean,trace_declared_mean,declared_present_rate,no_assert_rate,no_sut_call_rate
+developer,all,115,115,0.3783,,,0.0,0.0261
+main_sonnet55_v1,all,294,287,0.3014,0.5331,0.9199,0.0557,0.0801

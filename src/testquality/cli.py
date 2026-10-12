@@ -142,7 +142,23 @@ def _cmd_mutate(args: argparse.Namespace) -> int:
     return 0
 
 
-IMPLEMENTED: dict[str, object] = {"mutate": _cmd_mutate,
+def _cmd_traceability(args: argparse.Namespace) -> int:
+    from .config import load_settings
+    from .coverage_tool import stable_pass_set
+    from .traceability import run_traceability
+
+    st = load_settings()
+    units, staging, _ = _suite_units(st, args.suite)
+    rows = run_traceability(
+        st, args.suite, units, staging_id=staging, stable=stable_pass_set(st, args.suite),
+        has_declaration=args.suite != "developer",
+    )
+    for r in rows:
+        print(r)
+    return 0
+
+
+IMPLEMENTED: dict[str, object] = {"traceability": _cmd_traceability,"mutate": _cmd_mutate,
     "generate": _cmd_generate, "execute": _cmd_execute, "coverage": _cmd_coverage,
 }
 
@@ -164,6 +180,8 @@ def build_parser() -> argparse.ArgumentParser:
         if name == "coverage":
             p.add_argument("--suite", required=True, help="'developer' or a run id")
         if name == "mutate":
+            p.add_argument("--suite", required=True, help="'developer' or a run id")
+        if name == "traceability":
             p.add_argument("--suite", required=True, help="'developer' or a run id")
         if name == "generate":
             p.add_argument("--model", action="append", help="model id (repeatable); default main")
