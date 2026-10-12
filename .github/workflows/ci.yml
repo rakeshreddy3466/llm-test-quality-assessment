@@ -17,7 +17,7 @@ jobs:
       - uses: astral-sh/setup-uv@v5
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install (tool only: no Home Assistant, no API key)
+      - name: "Install (tool only, no Home Assistant, no API key)"
         run: uv sync --extra analysis
       - name: Lint
         run: uv run ruff check .
