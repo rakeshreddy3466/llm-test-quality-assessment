@@ -1,0 +1,7 @@
+suite,scope,line_cov,branch_cov,lines_covered,lines_total,branches_covered,branches_total,tests_passing
+developer,all,1.0,0.931,246,246,54,58,115
+developer,target:developer,1.0,0.931,246,246,54,58,115
+main_sonnet55_v1,all,0.9959,0.9655,245,246,56,58,287
+main_sonnet55_v1,target:binary_sensor,0.8659,0.7759,213,246,45,58,145
+main_sonnet55_v1,target:config_flow,0.7683,0.5172,189,246,30,58,80
+main_sonnet55_v1,target:init,0.7439,0.5345,183,246,31,58,62

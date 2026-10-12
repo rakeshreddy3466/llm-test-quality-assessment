@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import contextlib
 import csv
+import os
 import shutil
 import subprocess
 import tempfile
@@ -106,6 +107,7 @@ def run_pytest(
     *,
     extra_args: list[str] | None = None,
     timeout: int = 600,
+    env: dict[str, str] | None = None,
 ) -> tuple[list[TestOutcome], subprocess.CompletedProcess | None, float]:
     """Run pytest in the HA tree. `paths` are relative to the HA root."""
     with tempfile.TemporaryDirectory() as tmp:
@@ -118,7 +120,8 @@ def run_pytest(
         t0 = time.monotonic()
         try:
             proc = subprocess.run(
-                cmd, cwd=settings.ha_core_dir, capture_output=True, text=True, timeout=timeout
+                cmd, cwd=settings.ha_core_dir, capture_output=True, text=True, timeout=timeout,
+                env={**os.environ, **env} if env else None,
             )
         except subprocess.TimeoutExpired:
             return [TestOutcome(Path(paths[0]).name, "<suite>", "timeout")], None, timeout

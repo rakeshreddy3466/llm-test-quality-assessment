@@ -94,7 +94,41 @@ def _cmd_execute(args: argparse.Namespace) -> int:
     return 0
 
 
-IMPLEMENTED: dict[str, object] = {"generate": _cmd_generate, "execute": _cmd_execute}
+def _suite_units(st, suite: str):
+    """Return (units, staging_id, targets) for 'developer' or a generation run id."""
+    import json
+
+    from .executor import developer_units
+
+    if suite == "developer":
+        units = developer_units(st)
+        return units, None, {u.name: "developer" for u in units}
+    run_dir = st.runs_dir / suite
+    mani = json.loads((run_dir / "manifest.json").read_text())
+    samples = [s for s in mani["samples"] if s["file"]]
+    units = [run_dir / "samples" / s["file"] for s in samples]
+    return units, suite, {s["file"]: s["target"] for s in samples}
+
+
+def _cmd_coverage(args: argparse.Namespace) -> int:
+    from .config import load_settings
+    from .coverage_tool import run_coverage, stable_pass_set
+
+    st = load_settings()
+    units, staging, targets = _suite_units(st, args.suite)
+    rows = run_coverage(
+        st, args.suite, units, staging_id=staging,
+        stable=stable_pass_set(st, args.suite), targets=targets,
+    )
+    for r in rows:
+        print({k: r[k] for k in ("scope", "line_cov", "branch_cov", "lines_covered", "lines_total",
+                                 "branches_covered", "branches_total", "tests_passing")})
+    return 0
+
+
+IMPLEMENTED: dict[str, object] = {
+    "generate": _cmd_generate, "execute": _cmd_execute, "coverage": _cmd_coverage,
+}
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -111,6 +145,8 @@ def build_parser() -> argparse.ArgumentParser:
             p.add_argument("--suite", required=True,
                            help="'developer' or a generation run id under data/runs/")
             p.add_argument("--repeats", type=int, help="runs per suite (default from config)")
+        if name == "coverage":
+            p.add_argument("--suite", required=True, help="'developer' or a run id")
         if name == "generate":
             p.add_argument("--model", action="append", help="model id (repeatable); default main")
             p.add_argument("--cheap", action="store_true", help="use the cheap model")

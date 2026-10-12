@@ -1,1 +1,3 @@
 suite,error_type,count
+main_sonnet55_v1,RuntimeError,6
+main_sonnet55_v1,AssertionError,1
