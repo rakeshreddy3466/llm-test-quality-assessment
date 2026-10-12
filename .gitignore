@@ -7,3 +7,4 @@ htmlcov/
 mutants/
 .pytest_cache/
 .DS_Store
+work/

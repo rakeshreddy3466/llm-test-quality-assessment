@@ -7,7 +7,7 @@ Read `docs/PLAN.md` first. Update this file at the end of every phase.
 | 2 | Generation pipeline | done; run `main_sonnet55_v1` (sonnet-5-5, k=5, 15 samples, $1.05) |
 | 3 | Executability | done (developer baseline measured; LLM suites pending generation) |
 | 4 | Coverage | done (developer + main_sonnet55_v1) |
-| 5 | Mutation testing | todo |
+| 5 | Mutation testing | done (mutmut 3.8 works; developer + main_sonnet55_v1) |
 | 6 | Traceability | todo |
 | 7 | Test smells | todo |
 | 8 | Relevance & completeness | todo |
@@ -25,3 +25,5 @@ Read `docs/PLAN.md` first. Update this file at the end of every phase.
 - Phase 4: `uv run testquality coverage --suite developer|<run_id>` -> results/coverage_{units,suites,per_test}.csv + results/cache/coverage_<suite>.json (per-test lines/arcs, reused by phases 5-8). Developer: line 246/246, branch 54/58. LLM run main_sonnet55_v1: collect 15/15, 294 tests, pass 97.6% (7 failing: 6 RuntimeError in init migration tests, 1 AssertionError), union line 245/246, branch 56/58.
 - Do NOT run `ruff --fix` on data/ (excluded now). Samples are verbatim extractions of calls.jsonl responses.
 - Haiku run (cheap model) not yet generated; run `uv run testquality generate --cheap --run-id cheap_haiku55_v1` if wanted for extra comparison (~$0.1).
+- Phase 5: `uv run testquality mutate --suite developer|<run_id>` (~5 min for 15 samples) -> results/mutation_{units,suites,mutants}.csv. mutmut workspace in work/ (gitignored, rebuilt per unit). 164 mutants. developer union 129/164 (0.787); LLM union 133/164 (0.811). score_global is the comparable metric; score_covered = brief's killed/(killed+survived).
+- config_flow samples mostly only touch config_flow.py functions (~10 mutants), hence tiny global scores: real, not a bug.

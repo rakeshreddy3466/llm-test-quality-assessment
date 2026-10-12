@@ -36,7 +36,8 @@ execution:
 
 mutation:
   tool: mutmut
-  mutate_only_covered_lines: true
+  mutate_only_covered_lines: false   # see docs/DECISIONS.md: full mutant set, covered-only score derived
+  max_children: 4
   paths_to_mutate: homeassistant/components/threshold/
 
 review:

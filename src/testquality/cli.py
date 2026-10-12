@@ -126,7 +126,23 @@ def _cmd_coverage(args: argparse.Namespace) -> int:
     return 0
 
 
-IMPLEMENTED: dict[str, object] = {
+def _cmd_mutate(args: argparse.Namespace) -> int:
+    from .config import load_settings
+    from .coverage_tool import stable_pass_set
+    from .mutation_tool import run_mutation
+
+    st = load_settings()
+    units, _, targets = _suite_units(st, args.suite)
+    rows = run_mutation(
+        st, args.suite, units, targets, stable_pass_set(st, args.suite),
+        with_snapshots=args.suite == "developer",
+    )
+    for r in rows:
+        print(r)
+    return 0
+
+
+IMPLEMENTED: dict[str, object] = {"mutate": _cmd_mutate,
     "generate": _cmd_generate, "execute": _cmd_execute, "coverage": _cmd_coverage,
 }
 
@@ -146,6 +162,8 @@ def build_parser() -> argparse.ArgumentParser:
                            help="'developer' or a generation run id under data/runs/")
             p.add_argument("--repeats", type=int, help="runs per suite (default from config)")
         if name == "coverage":
+            p.add_argument("--suite", required=True, help="'developer' or a run id")
+        if name == "mutate":
             p.add_argument("--suite", required=True, help="'developer' or a run id")
         if name == "generate":
             p.add_argument("--model", action="append", help="model id (repeatable); default main")
