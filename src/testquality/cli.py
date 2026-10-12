@@ -69,7 +69,32 @@ def _cmd_generate(args: argparse.Namespace) -> int:
     return 0
 
 
-IMPLEMENTED: dict[str, object] = {"generate": _cmd_generate}
+def _cmd_execute(args: argparse.Namespace) -> int:
+    import json
+
+    from .config import load_settings
+    from .executor import developer_units, run_executability
+
+    st = load_settings()
+    repeats = args.repeats or st.config["execution"]["repeats"]
+    timeout = st.config["execution"]["timeout_seconds"]
+    if args.suite == "developer":
+        units, staging, requested, label = developer_units(st), None, None, "developer"
+    else:
+        run_dir = st.runs_dir / args.suite
+        mani = json.loads((run_dir / "manifest.json").read_text())
+        units = [run_dir / "samples" / s["file"] for s in mani["samples"] if s["file"]]
+        staging, requested, label = args.suite, len(mani["samples"]), args.suite
+    summary = run_executability(
+        st, label, units, repeats=repeats, timeout=timeout, staging_id=staging,
+        units_requested=requested,
+    )
+    for k, v in summary.items():
+        print(f"{k}: {v}")
+    return 0
+
+
+IMPLEMENTED: dict[str, object] = {"generate": _cmd_generate, "execute": _cmd_execute}
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -82,6 +107,10 @@ def build_parser() -> argparse.ArgumentParser:
     for name, (phase, help_text) in SUBCOMMANDS.items():
         p = sub.add_parser(name, help=f"{help_text} [phase {phase}]", description=help_text)
         p.set_defaults(phase=phase)
+        if name == "execute":
+            p.add_argument("--suite", required=True,
+                           help="'developer' or a generation run id under data/runs/")
+            p.add_argument("--repeats", type=int, help="runs per suite (default from config)")
         if name == "generate":
             p.add_argument("--model", action="append", help="model id (repeatable); default main")
             p.add_argument("--cheap", action="store_true", help="use the cheap model")

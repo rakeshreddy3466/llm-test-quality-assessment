@@ -13,3 +13,6 @@
 | 2026-10-12 | 2 | Cost guard | `generate` refuses (exit 3) when estimate > llm.max_cost_usd (3.0); dry-run estimate uses 3.3 chars/token and 9000 output tokens/call | Brief rule (a) |
 | 2026-10-12 | 2 | Truncated outputs | stop_reason=max_tokens samples are logged but not written as test files | Truncated code would be miscounted as non-executable |
 | 2026-10-12 | 2 | Workspace header | Optional ANTHROPIC_WORKSPACE_ID in .env sent as `anthropic-workspace-id` header | First real call returned 400: key not scoped to a workspace |
+| 2026-10-12 | 3 | Execution unit | One pytest process per test file per repeat, junit xml parsed; `--timeout=120` per test, `-p no:sugar` | Isolates a broken sample (syntax/import error) from others; junit gives per-test outcomes |
+| 2026-10-12 | 3 | Metric definitions | collect_rate = files with >=1 collected test / files requested (incl. samples lost to truncation); pass_rate = passed/(passed+failed+error) averaged over 3 repeats; flaky = test with differing outcomes across repeats; skipped excluded | Keeps denominators explicit; docs/metrics.md will restate in phase 6 |
+| 2026-10-12 | 3 | Results layout | results/exec_tests.csv, exec_summary.csv, exec_errors.csv keyed by suite; a rerun replaces that suite's rows | Phase 11 report builds only from these CSVs |
