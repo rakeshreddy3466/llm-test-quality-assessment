@@ -1,0 +1,55 @@
+# DRAFT, needs human check
+# Behaviours of homeassistant/components/threshold at tag 2026.10.1, drafted by the assistant
+# from reading the source. Line ranges are inclusive and refer to that tag.
+# NOT yet reviewed by a human: ids, wording and ranges may change. Do not cite as ground truth.
+status: "DRAFT, needs human check"
+component: homeassistant/components/threshold
+tag: "2026.10.1"
+behaviours:
+  # ---- binary_sensor.py: platform (YAML) configuration ------------------------------------
+  - {id: B01, file: binary_sensor.py, lines: [66, 71], title: "YAML config is rejected when neither lower nor upper is given"}
+  - {id: B02, file: binary_sensor.py, lines: [74, 88], title: "YAML platform schema: entity_id required, hysteresis defaults to 0, name defaults to 'Threshold'"}
+  - {id: B03, file: binary_sensor.py, lines: [125, 151], title: "YAML platform setup adds one ThresholdSensor from the config without a unique id"}
+  # ---- binary_sensor.py: config entry setup ------------------------------------------------
+  - {id: B04, file: binary_sensor.py, lines: [91, 122], title: "Config entry setup adds a ThresholdSensor using entry options, title as name and entry id as unique id"}
+  - {id: B05, file: binary_sensor.py, lines: [154, 160], title: "Threshold type is range when both limits are set, lower when only lower, upper otherwise"}
+  # ---- binary_sensor.py: entity lifecycle --------------------------------------------------
+  - {id: B06, file: binary_sensor.py, lines: [183, 197], title: "New sensor starts with unknown position and no sensor value; only provided limits are stored"}
+  - {id: B07, file: binary_sensor.py, lines: [199, 206], title: "Entity tracks the source entity once added to Home Assistant"}
+  - {id: B08, file: binary_sensor.py, lines: [210, 211], title: "A missing source state is ignored"}
+  - {id: B09, file: binary_sensor.py, lines: [213, 218], title: "A numeric source state becomes a float sensor value; unknown or unavailable gives no value"}
+  - {id: B10, file: binary_sensor.py, lines: [219, 221], title: "A non-numeric source state clears the sensor value and logs a warning"}
+  - {id: B11, file: binary_sensor.py, lines: [231, 240], title: "A source state change recalculates and writes the state, except in preview mode"}
+  - {id: B12, file: binary_sensor.py, lines: [225, 229], title: "In preview mode the calculated state and attributes go to the preview callback"}
+  - {id: B13, file: binary_sensor.py, lines: [242, 247], title: "Tracking is removed on entity removal and the state is evaluated immediately on start"}
+  - {id: B14, file: binary_sensor.py, lines: [249, 261], title: "State attributes expose entity id, hysteresis, lower, upper, position, sensor value and type"}
+  # ---- binary_sensor.py: state machine -----------------------------------------------------
+  - {id: B15, file: binary_sensor.py, lines: [267, 273], title: "Hysteresis widens the below/above comparison on both sides of a limit"}
+  - {id: B16, file: binary_sensor.py, lines: [275, 278], title: "Without a sensor value the position is unknown and the state is unknown"}
+  - {id: B17, file: binary_sensor.py, lines: [281, 283], title: "Lower threshold: first known value initialises off / above"}
+  - {id: B18, file: binary_sensor.py, lines: [285, 287], title: "Lower threshold: value below the limit turns the sensor on (position below)"}
+  - {id: B19, file: binary_sensor.py, lines: [288, 291], title: "Lower threshold: value above the limit turns the sensor off (position above)"}
+  - {id: B20, file: binary_sensor.py, lines: [296, 298], title: "Upper threshold: first known value initialises off / below"}
+  - {id: B21, file: binary_sensor.py, lines: [300, 302], title: "Upper threshold: value above the limit turns the sensor on (position above)"}
+  - {id: B22, file: binary_sensor.py, lines: [303, 306], title: "Upper threshold: value below the limit turns the sensor off (position below)"}
+  - {id: B23, file: binary_sensor.py, lines: [309, 311], title: "Range threshold: first known value initialises on / in_range"}
+  - {id: B24, file: binary_sensor.py, lines: [313, 315], title: "Range threshold: value below the lower limit turns the sensor off (position below)"}
+  - {id: B25, file: binary_sensor.py, lines: [316, 318], title: "Range threshold: value above the upper limit turns the sensor off (position above)"}
+  - {id: B26, file: binary_sensor.py, lines: [319, 324], title: "Range threshold: value between the limits turns the sensor on (position in_range)"}
+  # ---- binary_sensor.py: preview -----------------------------------------------------------
+  - {id: B27, file: binary_sensor.py, lines: [335, 342], title: "Preview without entity id or without any limit marks the entity unavailable and reports once"}
+  - {id: B28, file: binary_sensor.py, lines: [344, 347], title: "Preview with valid input stores the callback, starts tracking and returns the unsubscribe callback"}
+  # ---- config_flow.py ----------------------------------------------------------------------
+  - {id: B29, file: config_flow.py, lines: [29, 31], title: "Flow input needs a lower or an upper limit; a missing limit is stored as None"}
+  - {id: B30, file: config_flow.py, lines: [34, 75], title: "Config and options forms: entity selector limited to sensors, hysteresis required with default, preview enabled"}
+  - {id: B31, file: config_flow.py, lines: [87, 91], title: "Config entry title is the name entered by the user"}
+  - {id: B32, file: config_flow.py, lines: [93, 97], title: "Handler registers the websocket preview command"}
+  - {id: B33, file: config_flow.py, lines: [116, 118], title: "Config flow preview reads entity id and name from the user input"}
+  - {id: B34, file: config_flow.py, lines: [119, 125], title: "Options flow preview reads entity id and name from the config entry; unknown entry raises an error"}
+  - {id: B35, file: config_flow.py, lines: [127, 134], title: "Preview updates are forwarded to the websocket as event messages with state and attributes"}
+  - {id: B36, file: config_flow.py, lines: [136, 150], title: "Preview creates a ThresholdSensor from the user input, confirms the request and registers the subscription"}
+  # ---- __init__.py -------------------------------------------------------------------------
+  - {id: B37, file: __init__.py, lines: [20, 37], title: "Setup follows source entity id changes: the entry options are updated and the entry is reloaded"}
+  - {id: B38, file: __init__.py, lines: [39, 43], title: "Setup forwards the binary_sensor platform and succeeds"}
+  - {id: B39, file: __init__.py, lines: [77, 81], title: "Unloading the entry unloads the binary_sensor platform"}
+  - {id: B40, file: __init__.py, lines: [52, 74], title: "Migration from version 1.1 removes the helper from the source device and bumps the minor version"}

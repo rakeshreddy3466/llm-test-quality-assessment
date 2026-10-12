@@ -92,11 +92,11 @@ Exact thresholds are defined in `src/testquality/smells.py` and mirrored in phas
 
 `data/behaviours.yaml` lists 15–40 behaviours of the SUT with code line ranges (DRAFT, needs
 human check). A test is mapped to a behaviour when it is valid and covers >= 50 % of the
-behaviour's lines (statements) **and** covers at least one line of it that the test does not share
-with *all* behaviours (non-trivial).
+behaviour's statements (per-test coverage from phase 4).
 
 | Metric | Definition |
 |---|---|
+| reachable behaviours | behaviours that at least one developer test maps to and that are not import-time only (module level schemas run in whichever test imports the module first, so attribution is arbitrary). Because reachability is defined from the developer baseline, developer completeness is 1.0 by construction. |
 | relevance | valid tests mapped to >= 1 behaviour / valid tests (tests that exercise no listed behaviour are irrelevant boiler-plate). |
 | completeness | behaviours mapped to >= 1 valid test / behaviours. |
 | weighted completeness | weighted by lines of each behaviour. |

@@ -1,0 +1,6 @@
+suite,scope,behaviours_reachable,behaviours_covered,completeness,completeness_weighted,valid_tests,relevant_tests,relevance
+developer,all,38,38,1.0,1.0,115,114,0.9913
+main_sonnet55_v1,all,38,38,1.0,1.0,287,263,0.9164
+main_sonnet55_v1,target:binary_sensor,38,30,0.7895,0.775,145,139,0.9586
+main_sonnet55_v1,target:config_flow,38,24,0.6316,0.5813,80,66,0.825
+main_sonnet55_v1,target:init,38,22,0.5789,0.6125,62,58,0.9355

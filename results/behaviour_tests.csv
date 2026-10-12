@@ -1,0 +1,403 @@
+suite,unit,test,n_behaviours,behaviours
+developer,test_binary_sensor.py,test_device_id,9,B04 B05 B06 B08 B13 B37 B38 B39 B40
+developer,test_binary_sensor.py,test_device_id_yaml,6,B01 B03 B05 B06 B08 B13
+developer,test_binary_sensor.py,test_sensor_in_range_no_hysteresis[vals0-in_range-on],10,B01 B03 B06 B08 B09 B11 B13 B15 B23 B26
+developer,test_binary_sensor.py,test_sensor_in_range_no_hysteresis[vals1-in_range-on],10,B01 B03 B06 B08 B09 B11 B13 B15 B23 B26
+developer,test_binary_sensor.py,test_sensor_in_range_no_hysteresis[vals10-in_range-on],10,B01 B03 B06 B08 B09 B11 B13 B15 B23 B26
+developer,test_binary_sensor.py,test_sensor_in_range_no_hysteresis[vals11-above-off],12,B01 B03 B06 B08 B09 B11 B13 B15 B23 B24 B25 B26
+developer,test_binary_sensor.py,test_sensor_in_range_no_hysteresis[vals12-below-off],12,B01 B03 B06 B08 B09 B11 B13 B15 B23 B24 B25 B26
+developer,test_binary_sensor.py,test_sensor_in_range_no_hysteresis[vals13-above-off],11,B01 B03 B06 B08 B09 B11 B13 B15 B23 B25 B26
+developer,test_binary_sensor.py,test_sensor_in_range_no_hysteresis[vals14-below-off],11,B01 B03 B06 B08 B09 B11 B13 B15 B23 B24 B26
+developer,test_binary_sensor.py,test_sensor_in_range_no_hysteresis[vals2-in_range-on],10,B01 B03 B06 B08 B09 B11 B13 B15 B23 B26
+developer,test_binary_sensor.py,test_sensor_in_range_no_hysteresis[vals3-below-off],11,B01 B03 B06 B08 B09 B11 B13 B15 B23 B24 B26
+developer,test_binary_sensor.py,test_sensor_in_range_no_hysteresis[vals4-above-off],12,B01 B03 B06 B08 B09 B11 B13 B15 B23 B24 B25 B26
+developer,test_binary_sensor.py,test_sensor_in_range_no_hysteresis[vals5-unknown-unknown],14,B01 B03 B06 B08 B09 B10 B11 B13 B15 B16 B23 B24 B25 B26
+developer,test_binary_sensor.py,test_sensor_in_range_no_hysteresis[vals6-above-off],14,B01 B03 B06 B08 B09 B10 B11 B13 B15 B16 B23 B24 B25 B26
+developer,test_binary_sensor.py,test_sensor_in_range_no_hysteresis[vals7-unknown-unknown],12,B01 B03 B06 B08 B09 B10 B11 B13 B15 B16 B23 B25
+developer,test_binary_sensor.py,test_sensor_in_range_no_hysteresis[vals8-in_range-on],10,B01 B03 B06 B08 B09 B11 B13 B15 B23 B26
+developer,test_binary_sensor.py,test_sensor_in_range_no_hysteresis[vals9-in_range-on],10,B01 B03 B06 B08 B09 B11 B13 B15 B23 B26
+developer,test_binary_sensor.py,test_sensor_in_range_unknown_state,11,B01 B03 B06 B08 B09 B11 B13 B15 B16 B23 B26
+developer,test_binary_sensor.py,test_sensor_in_range_with_hysteresis[vals0-in_range-on],10,B01 B03 B06 B08 B09 B11 B13 B15 B23 B26
+developer,test_binary_sensor.py,test_sensor_in_range_with_hysteresis[vals1-in_range-on],10,B01 B03 B06 B08 B09 B11 B13 B15 B23 B26
+developer,test_binary_sensor.py,test_sensor_in_range_with_hysteresis[vals10-above-off],12,B01 B03 B06 B08 B09 B11 B13 B15 B23 B24 B25 B26
+developer,test_binary_sensor.py,test_sensor_in_range_with_hysteresis[vals11-in_range-on],12,B01 B03 B06 B08 B09 B11 B13 B15 B23 B24 B25 B26
+developer,test_binary_sensor.py,test_sensor_in_range_with_hysteresis[vals12-unknown-unknown],14,B01 B03 B06 B08 B09 B10 B11 B13 B15 B16 B23 B24 B25 B26
+developer,test_binary_sensor.py,test_sensor_in_range_with_hysteresis[vals13-in_range-on],14,B01 B03 B06 B08 B09 B10 B11 B13 B15 B16 B23 B24 B25 B26
+developer,test_binary_sensor.py,test_sensor_in_range_with_hysteresis[vals14-unknown-unknown],12,B01 B03 B06 B08 B09 B10 B11 B13 B15 B16 B23 B26
+developer,test_binary_sensor.py,test_sensor_in_range_with_hysteresis[vals15-in_range-on],10,B01 B03 B06 B08 B09 B11 B13 B15 B23 B26
+developer,test_binary_sensor.py,test_sensor_in_range_with_hysteresis[vals16-in_range-on],10,B01 B03 B06 B08 B09 B11 B13 B15 B23 B26
+developer,test_binary_sensor.py,test_sensor_in_range_with_hysteresis[vals17-in_range-on],10,B01 B03 B06 B08 B09 B11 B13 B15 B23 B26
+developer,test_binary_sensor.py,test_sensor_in_range_with_hysteresis[vals18-above-off],12,B01 B03 B06 B08 B09 B11 B13 B15 B23 B24 B25 B26
+developer,test_binary_sensor.py,test_sensor_in_range_with_hysteresis[vals19-below-off],12,B01 B03 B06 B08 B09 B11 B13 B15 B23 B24 B25 B26
+developer,test_binary_sensor.py,test_sensor_in_range_with_hysteresis[vals2-in_range-on],10,B01 B03 B06 B08 B09 B11 B13 B15 B23 B26
+developer,test_binary_sensor.py,test_sensor_in_range_with_hysteresis[vals20-above-off],11,B01 B03 B06 B08 B09 B11 B13 B15 B23 B25 B26
+developer,test_binary_sensor.py,test_sensor_in_range_with_hysteresis[vals21-below-off],11,B01 B03 B06 B08 B09 B11 B13 B15 B23 B24 B26
+developer,test_binary_sensor.py,test_sensor_in_range_with_hysteresis[vals22-below-off],11,B01 B03 B06 B08 B09 B11 B13 B15 B23 B24 B26
+developer,test_binary_sensor.py,test_sensor_in_range_with_hysteresis[vals23-in_range-on],11,B01 B03 B06 B08 B09 B11 B13 B15 B23 B24 B26
+developer,test_binary_sensor.py,test_sensor_in_range_with_hysteresis[vals24-above-off],11,B01 B03 B06 B08 B09 B11 B13 B15 B23 B25 B26
+developer,test_binary_sensor.py,test_sensor_in_range_with_hysteresis[vals25-in_range-on],11,B01 B03 B06 B08 B09 B11 B13 B15 B23 B25 B26
+developer,test_binary_sensor.py,test_sensor_in_range_with_hysteresis[vals26-above-off],11,B01 B03 B06 B08 B09 B11 B13 B15 B23 B25 B26
+developer,test_binary_sensor.py,test_sensor_in_range_with_hysteresis[vals27-below-off],11,B01 B03 B06 B08 B09 B11 B13 B15 B23 B24 B26
+developer,test_binary_sensor.py,test_sensor_in_range_with_hysteresis[vals28-below-off],11,B01 B03 B06 B08 B09 B11 B13 B15 B23 B24 B26
+developer,test_binary_sensor.py,test_sensor_in_range_with_hysteresis[vals29-above-off],11,B01 B03 B06 B08 B09 B11 B13 B15 B23 B25 B26
+developer,test_binary_sensor.py,test_sensor_in_range_with_hysteresis[vals3-in_range-on],10,B01 B03 B06 B08 B09 B11 B13 B15 B23 B26
+developer,test_binary_sensor.py,test_sensor_in_range_with_hysteresis[vals4-in_range-on],10,B01 B03 B06 B08 B09 B11 B13 B15 B23 B26
+developer,test_binary_sensor.py,test_sensor_in_range_with_hysteresis[vals5-below-off],11,B01 B03 B06 B08 B09 B11 B13 B15 B23 B24 B26
+developer,test_binary_sensor.py,test_sensor_in_range_with_hysteresis[vals6-below-off],11,B01 B03 B06 B08 B09 B11 B13 B15 B23 B24 B26
+developer,test_binary_sensor.py,test_sensor_in_range_with_hysteresis[vals7-in_range-on],11,B01 B03 B06 B08 B09 B11 B13 B15 B23 B24 B26
+developer,test_binary_sensor.py,test_sensor_in_range_with_hysteresis[vals8-in_range-on],11,B01 B03 B06 B08 B09 B11 B13 B15 B23 B24 B26
+developer,test_binary_sensor.py,test_sensor_in_range_with_hysteresis[vals9-above-off],12,B01 B03 B06 B08 B09 B11 B13 B15 B23 B24 B25 B26
+developer,test_binary_sensor.py,test_sensor_lower[vals0-above-off],11,B01 B03 B05 B06 B08 B09 B11 B13 B15 B17 B19
+developer,test_binary_sensor.py,test_sensor_lower[vals1-above-off],11,B01 B03 B05 B06 B08 B09 B11 B13 B15 B17 B19
+developer,test_binary_sensor.py,test_sensor_lower[vals2-below-on],12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B17 B18 B19
+developer,test_binary_sensor.py,test_sensor_lower[vals3-below-on],12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B17 B18 B19
+developer,test_binary_sensor.py,test_sensor_lower[vals4-unknown-unknown],14,B01 B03 B05 B06 B08 B09 B10 B11 B13 B15 B16 B17 B18 B19
+developer,test_binary_sensor.py,test_sensor_lower[vals5-above-off],14,B01 B03 B05 B06 B08 B09 B10 B11 B13 B15 B16 B17 B18 B19
+developer,test_binary_sensor.py,test_sensor_lower[vals6-unknown-unknown],13,B01 B03 B05 B06 B08 B09 B10 B11 B13 B15 B16 B17 B19
+developer,test_binary_sensor.py,test_sensor_lower_hysteresis[vals0-above-off],11,B01 B03 B05 B06 B08 B09 B11 B13 B15 B17 B19
+developer,test_binary_sensor.py,test_sensor_lower_hysteresis[vals1-above-off],11,B01 B03 B05 B06 B08 B09 B11 B13 B15 B17 B19
+developer,test_binary_sensor.py,test_sensor_lower_hysteresis[vals10-above-off],11,B01 B03 B05 B06 B08 B09 B11 B13 B15 B17 B19
+developer,test_binary_sensor.py,test_sensor_lower_hysteresis[vals11-below-on],12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B17 B18 B19
+developer,test_binary_sensor.py,test_sensor_lower_hysteresis[vals12-above-off],11,B01 B03 B05 B06 B08 B09 B11 B13 B15 B17 B19
+developer,test_binary_sensor.py,test_sensor_lower_hysteresis[vals13-above-off],11,B01 B03 B05 B06 B08 B09 B11 B13 B15 B17 B19
+developer,test_binary_sensor.py,test_sensor_lower_hysteresis[vals14-above-off],11,B01 B03 B05 B06 B08 B09 B11 B13 B15 B17 B19
+developer,test_binary_sensor.py,test_sensor_lower_hysteresis[vals15-below-on],12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B17 B18 B19
+developer,test_binary_sensor.py,test_sensor_lower_hysteresis[vals2-above-off],11,B01 B03 B05 B06 B08 B09 B11 B13 B15 B17 B19
+developer,test_binary_sensor.py,test_sensor_lower_hysteresis[vals3-above-off],11,B01 B03 B05 B06 B08 B09 B11 B13 B15 B17 B19
+developer,test_binary_sensor.py,test_sensor_lower_hysteresis[vals4-below-on],12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B17 B18 B19
+developer,test_binary_sensor.py,test_sensor_lower_hysteresis[vals5-below-on],12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B17 B18 B19
+developer,test_binary_sensor.py,test_sensor_lower_hysteresis[vals6-above-off],12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B17 B18 B19
+developer,test_binary_sensor.py,test_sensor_lower_hysteresis[vals7-unknown-unknown],14,B01 B03 B05 B06 B08 B09 B10 B11 B13 B15 B16 B17 B18 B19
+developer,test_binary_sensor.py,test_sensor_lower_hysteresis[vals8-above-off],14,B01 B03 B05 B06 B08 B09 B10 B11 B13 B15 B16 B17 B18 B19
+developer,test_binary_sensor.py,test_sensor_lower_hysteresis[vals9-unknown-unknown],13,B01 B03 B05 B06 B08 B09 B10 B11 B13 B15 B16 B17 B19
+developer,test_binary_sensor.py,test_sensor_lower_zero_threshold,12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B17 B18 B19
+developer,test_binary_sensor.py,test_sensor_no_lower_upper,1,B01
+developer,test_binary_sensor.py,test_sensor_upper[vals0-below-off],15,B01 B03 B05 B06 B07 B08 B09 B11 B13 B14 B15 B20 B22 B31 B32
+developer,test_binary_sensor.py,test_sensor_upper[vals1-above-on],12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B20 B21 B22
+developer,test_binary_sensor.py,test_sensor_upper[vals2-below-off],12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B20 B21 B22
+developer,test_binary_sensor.py,test_sensor_upper[vals3-below-off],12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B20 B21 B22
+developer,test_binary_sensor.py,test_sensor_upper[vals4-unknown-unknown],14,B01 B03 B05 B06 B08 B09 B10 B11 B13 B15 B16 B20 B21 B22
+developer,test_binary_sensor.py,test_sensor_upper[vals5-below-off],14,B01 B03 B05 B06 B08 B09 B10 B11 B13 B15 B16 B20 B21 B22
+developer,test_binary_sensor.py,test_sensor_upper[vals6-unknown-unknown],13,B01 B03 B05 B06 B08 B09 B10 B11 B13 B15 B16 B20 B22
+developer,test_binary_sensor.py,test_sensor_upper_hysteresis[vals0-below-off],11,B01 B03 B05 B06 B08 B09 B11 B13 B15 B20 B22
+developer,test_binary_sensor.py,test_sensor_upper_hysteresis[vals1-below-off],11,B01 B03 B05 B06 B08 B09 B11 B13 B15 B20 B22
+developer,test_binary_sensor.py,test_sensor_upper_hysteresis[vals10-above-on],12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B20 B21 B22
+developer,test_binary_sensor.py,test_sensor_upper_hysteresis[vals11-below-off],11,B01 B03 B05 B06 B08 B09 B11 B13 B15 B20 B22
+developer,test_binary_sensor.py,test_sensor_upper_hysteresis[vals12-below-off],11,B01 B03 B05 B06 B08 B09 B11 B13 B15 B20 B22
+developer,test_binary_sensor.py,test_sensor_upper_hysteresis[vals13-below-off],11,B01 B03 B05 B06 B08 B09 B11 B13 B15 B20 B22
+developer,test_binary_sensor.py,test_sensor_upper_hysteresis[vals14-above-on],12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B20 B21 B22
+developer,test_binary_sensor.py,test_sensor_upper_hysteresis[vals15-below-off],11,B01 B03 B05 B06 B08 B09 B11 B13 B15 B20 B22
+developer,test_binary_sensor.py,test_sensor_upper_hysteresis[vals2-above-on],12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B20 B21 B22
+developer,test_binary_sensor.py,test_sensor_upper_hysteresis[vals3-above-on],12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B20 B21 B22
+developer,test_binary_sensor.py,test_sensor_upper_hysteresis[vals4-below-off],12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B20 B21 B22
+developer,test_binary_sensor.py,test_sensor_upper_hysteresis[vals5-below-off],12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B20 B21 B22
+developer,test_binary_sensor.py,test_sensor_upper_hysteresis[vals6-above-on],12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B20 B21 B22
+developer,test_binary_sensor.py,test_sensor_upper_hysteresis[vals7-unknown-unknown],14,B01 B03 B05 B06 B08 B09 B10 B11 B13 B15 B16 B20 B21 B22
+developer,test_binary_sensor.py,test_sensor_upper_hysteresis[vals8-above-on],14,B01 B03 B05 B06 B08 B09 B10 B11 B13 B15 B16 B20 B21 B22
+developer,test_binary_sensor.py,test_sensor_upper_hysteresis[vals9-unknown-unknown],13,B01 B03 B05 B06 B08 B09 B10 B11 B13 B15 B16 B20 B21
+developer,test_binary_sensor.py,test_sensor_upper_zero_threshold,12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B20 B21 B22
+developer,test_config_flow.py,test_config_flow,6,B07 B14 B29 B31 B32 B39
+developer,test_config_flow.py,test_config_flow_preview_success[missing_entity_id],6,B05 B06 B27 B33 B35 B36
+developer,test_config_flow.py,test_config_flow_preview_success[missing_hysteresis],13,B05 B06 B08 B09 B12 B13 B15 B17 B18 B28 B33 B35 B36
+developer,test_config_flow.py,test_config_flow_preview_success[missing_upper_lower],6,B05 B06 B27 B33 B35 B36
+developer,test_config_flow.py,test_config_flow_preview_success[success],13,B05 B06 B08 B09 B12 B13 B15 B17 B18 B28 B33 B35 B36
+developer,test_config_flow.py,test_fail[extra_input_data0-need_lower_upper],1,B29
+developer,test_config_flow.py,test_options,16,B04 B05 B06 B08 B09 B13 B15 B17 B19 B20 B22 B29 B37 B38 B39 B40
+developer,test_config_flow.py,test_options_flow_preview,18,B04 B05 B06 B08 B09 B12 B13 B15 B17 B18 B28 B34 B35 B36 B37 B38 B39 B40
+developer,test_config_flow.py,test_options_flow_sensor_preview_config_entry_removed,10,B04 B05 B06 B08 B13 B34 B37 B38 B39 B40
+developer,test_init.py,test_async_handle_source_entity_changes_source_entity_moved_other_device,8,B04 B05 B06 B08 B13 B37 B38 B39
+developer,test_init.py,test_async_handle_source_entity_changes_source_entity_removed,8,B04 B05 B06 B08 B13 B37 B38 B39
+developer,test_init.py,test_async_handle_source_entity_changes_source_entity_removed_from_device,8,B04 B05 B06 B08 B13 B37 B38 B39
+developer,test_init.py,test_async_handle_source_entity_changes_source_entity_removed_shared_device,8,B04 B05 B06 B08 B13 B37 B38 B39
+developer,test_init.py,test_async_handle_source_entity_new_entity_id,8,B04 B05 B06 B08 B13 B37 B38 B39
+developer,test_init.py,test_entry_changed[sensor],9,B04 B05 B06 B08 B13 B37 B38 B39 B40
+developer,test_init.py,test_migration_1_1,9,B04 B05 B06 B08 B13 B37 B38 B39 B40
+developer,test_init.py,test_migration_from_future_version,0,
+developer,test_init.py,test_setup_and_remove_config_entry[binary_sensor],13,B04 B05 B06 B08 B09 B13 B15 B17 B18 B37 B38 B39 B40
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s0.py,test_config_entry_setup,12,B04 B05 B06 B08 B09 B13 B15 B17 B18 B37 B38 B39
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s0.py,test_config_entry_unload_removes_tracking,8,B04 B05 B06 B08 B13 B37 B38 B39
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s0.py,test_device_class_option,11,B01 B03 B05 B06 B08 B09 B11 B13 B15 B20 B22
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s0.py,test_extra_state_attributes_missing_limit_is_none,11,B01 B03 B05 B06 B08 B09 B11 B13 B15 B20 B22
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s0.py,test_extra_state_attributes_range,10,B01 B03 B06 B08 B09 B11 B13 B15 B23 B26
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s0.py,test_hysteresis_lower,12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B17 B18 B19
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s0.py,test_hysteresis_upper,12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B20 B21 B22
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s0.py,test_initial_state_from_existing_source,10,B01 B03 B05 B06 B08 B09 B13 B15 B20 B21
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s0.py,test_lower_boundary_equal_is_off,11,B01 B03 B05 B06 B08 B09 B11 B13 B15 B17 B19
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s0.py,test_lower_turns_on_below,12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B17 B18 B19
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s0.py,test_missing_source_is_unknown,6,B01 B03 B05 B06 B08 B13
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s0.py,test_no_missing_threshold_accepts_one,1,B01
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s0.py,test_no_missing_threshold_rejects_empty,1,B01
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s0.py,test_non_numeric_source_logs_warning,11,B01 B03 B05 B06 B08 B09 B10 B11 B13 B15 B16
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s0.py,test_platform_schema_defaults_and_coercion,1,B01
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s0.py,test_platform_schema_requires_entity_id,0,
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s0.py,test_platform_schema_requires_limit,1,B01
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s0.py,test_preview_sends_updates,12,B05 B06 B08 B09 B11 B12 B13 B15 B20 B21 B22 B28
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s0.py,test_preview_without_entity_id_reports_unavailable,3,B05 B06 B27
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s0.py,test_preview_without_limits_reports_unavailable,3,B05 B06 B27
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s0.py,test_range_boundaries_are_off_after_leaving,11,B01 B03 B06 B08 B09 B11 B13 B15 B23 B25 B26
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s0.py,test_range_in_and_out,12,B01 B03 B06 B08 B09 B11 B13 B15 B23 B24 B25 B26
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s0.py,test_threshold_type_lower,1,B05
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s0.py,test_threshold_type_range,0,
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s0.py,test_threshold_type_upper,1,B05
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s0.py,test_threshold_type_zero_is_a_limit,1,B05
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s0.py,test_unknown_unavailable_source[unavailable],12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B16 B20 B21
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s0.py,test_unknown_unavailable_source[unknown],12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B16 B20 B21
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s0.py,test_upper_boundary_equal_is_unchanged,11,B01 B03 B05 B06 B08 B09 B11 B13 B15 B20 B22
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s0.py,test_upper_turns_on_above_and_off_below,14,B01 B03 B05 B06 B08 B09 B11 B13 B15 B20 B21 B22 B31 B32
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s1.py,test_attributes_exposed,10,B01 B03 B06 B08 B09 B11 B13 B15 B23 B26
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s1.py,test_config_entry_setup,12,B04 B05 B06 B08 B09 B13 B15 B20 B21 B37 B38 B39
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s1.py,test_config_entry_unload,12,B04 B05 B06 B08 B09 B13 B15 B17 B19 B37 B38 B39
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s1.py,test_device_class_option,6,B01 B03 B05 B06 B08 B13
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s1.py,test_initial_source_state_is_used,10,B01 B03 B05 B06 B08 B09 B13 B15 B20 B21
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s1.py,test_lower_equal_stays_off,11,B01 B03 B05 B06 B08 B09 B11 B13 B15 B17 B19
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s1.py,test_lower_threshold_off_above,12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B17 B18 B19
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s1.py,test_lower_threshold_turns_on_below,11,B01 B03 B05 B06 B08 B09 B11 B13 B15 B17 B18
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s1.py,test_missing_source_leaves_unknown,6,B01 B03 B05 B06 B08 B13
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s1.py,test_no_missing_threshold_accepts_zero,1,B01
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s1.py,test_no_missing_threshold_rejects_empty,1,B01
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s1.py,test_non_numeric_source_warns,11,B01 B03 B05 B06 B08 B09 B10 B11 B13 B15 B16
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s1.py,test_platform_schema_defaults_and_coercion,1,B01
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s1.py,test_platform_schema_requires_threshold,1,B01
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s1.py,test_preview_reports_state_changes,12,B05 B06 B08 B09 B11 B12 B13 B15 B20 B21 B22 B28
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s1.py,test_preview_without_limits_is_unavailable,3,B05 B06 B27
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s1.py,test_range_above_is_off,10,B01 B03 B06 B08 B09 B11 B13 B15 B23 B25
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s1.py,test_range_below_is_off,11,B01 B03 B06 B08 B09 B11 B13 B15 B23 B24 B26
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s1.py,test_range_edge_values_initially_on,10,B01 B03 B06 B08 B09 B11 B13 B15 B23 B26
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s1.py,test_range_hysteresis_holds_off_state,11,B01 B03 B06 B08 B09 B11 B13 B15 B23 B24 B26
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s1.py,test_range_in_range_is_on,10,B01 B03 B06 B08 B09 B11 B13 B15 B23 B26
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s1.py,test_sensor_init_defaults,2,B05 B06
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s1.py,test_threshold_type_helper_variants,1,B05
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s1.py,test_unavailable_source_gives_unknown,12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B16 B20 B21
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s1.py,test_unknown_source_gives_unknown,10,B01 B03 B05 B06 B08 B09 B11 B13 B15 B16
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s1.py,test_upper_hysteresis_boundary_not_on,11,B01 B03 B05 B06 B08 B09 B11 B13 B15 B20 B22
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s1.py,test_upper_hysteresis_holds_state,12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B20 B21 B22
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s1.py,test_upper_threshold_equal_keeps_off,11,B01 B03 B05 B06 B08 B09 B11 B13 B15 B20 B22
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s1.py,test_upper_threshold_turns_off_below,12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B20 B21 B22
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s1.py,test_upper_threshold_turns_on_above,13,B01 B03 B05 B06 B08 B09 B11 B13 B15 B20 B21 B31 B32
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s2.py,test_attributes_include_hysteresis,10,B01 B03 B06 B08 B09 B11 B13 B15 B23 B26
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s2.py,test_config_entry_setup,12,B04 B05 B06 B08 B09 B13 B15 B20 B21 B37 B38 B39
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s2.py,test_device_class_option,11,B01 B03 B05 B06 B08 B09 B11 B13 B15 B20 B22
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s2.py,test_initial_state_read_from_existing_source,10,B01 B03 B05 B06 B08 B09 B13 B15 B20 B21
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s2.py,test_lower_off_above_and_boundary,12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B17 B18 B19
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s2.py,test_lower_turns_on_below,11,B01 B03 B05 B06 B08 B09 B11 B13 B15 B17 B18
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s2.py,test_missing_source_is_unknown,6,B01 B03 B05 B06 B08 B13
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s2.py,test_no_missing_threshold_rejects_empty,1,B01
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s2.py,test_non_numeric_source_logs_warning,11,B01 B03 B05 B06 B08 B09 B10 B11 B13 B15 B16
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s2.py,test_platform_schema_defaults,1,B01
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s2.py,test_platform_schema_requires_limit,1,B01
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s2.py,test_preview_reports_state_and_updates,12,B05 B06 B08 B09 B11 B12 B13 B15 B20 B21 B22 B28
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s2.py,test_preview_without_limits_is_unavailable,3,B05 B06 B27
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s2.py,test_range_boundaries_keep_state,11,B01 B03 B06 B08 B09 B11 B13 B15 B23 B25 B26
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s2.py,test_range_in_range_on,10,B01 B03 B06 B08 B09 B11 B13 B15 B23 B26
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s2.py,test_range_outside_is_off,12,B01 B03 B06 B08 B09 B11 B13 B15 B23 B24 B25 B26
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s2.py,test_threshold_type_helper_values,1,B05
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s2.py,test_unknown_source_gives_unknown[unavailable],12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B16 B20 B21
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s2.py,test_unknown_source_gives_unknown[unknown],12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B16 B20 B21
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s2.py,test_upper_boundary_equal_is_off,11,B01 B03 B05 B06 B08 B09 B11 B13 B15 B20 B22
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s2.py,test_upper_hysteresis_holds_state,12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B20 B21 B22
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s2.py,test_upper_turns_off_below,12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B20 B21 B22
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s2.py,test_upper_turns_on_above,13,B01 B03 B05 B06 B08 B09 B11 B13 B15 B20 B21 B31 B32
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s3.py,test_config_entry_setup,14,B04 B05 B06 B08 B09 B11 B13 B15 B20 B21 B22 B37 B38 B39
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s3.py,test_device_class_and_default_name,10,B01 B03 B05 B06 B08 B09 B13 B15 B20 B22
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s3.py,test_hysteresis_attribute_default,10,B01 B03 B05 B06 B08 B09 B13 B15 B20 B22
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s3.py,test_hysteresis_lower,12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B17 B18 B19
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s3.py,test_hysteresis_upper,12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B20 B21 B22
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s3.py,test_lower_boundary_is_off,10,B01 B03 B05 B06 B08 B09 B13 B15 B17 B19
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s3.py,test_lower_turns_on_below,12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B17 B18 B19
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s3.py,test_missing_source_is_unknown,6,B01 B03 B05 B06 B08 B13
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s3.py,test_no_missing_threshold_accepts_zero,1,B01
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s3.py,test_no_missing_threshold_rejects_empty,1,B01
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s3.py,test_non_numeric_source_logs_warning,13,B01 B03 B05 B06 B08 B09 B10 B11 B13 B15 B16 B20 B21
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s3.py,test_platform_schema_defaults_and_coercion,1,B01
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s3.py,test_platform_schema_requires_entity_id,0,
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s3.py,test_platform_schema_requires_limit,1,B01
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s3.py,test_preview_reports_state_updates,12,B05 B06 B08 B09 B11 B12 B13 B15 B20 B21 B22 B28
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s3.py,test_preview_without_limits_is_unavailable,3,B05 B06 B27
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s3.py,test_range_boundary_values,10,B01 B03 B06 B08 B09 B11 B13 B15 B23 B26
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s3.py,test_range_in_range_on,9,B01 B03 B06 B08 B09 B13 B15 B23 B26
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s3.py,test_range_outside_off,12,B01 B03 B06 B08 B09 B11 B13 B15 B23 B24 B25 B26
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s3.py,test_recovers_after_unknown,13,B01 B03 B05 B06 B08 B09 B11 B13 B15 B16 B20 B21 B22
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s3.py,test_threshold_type_helper_lower_and_upper,1,B05
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s3.py,test_threshold_type_helper_range,0,
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s3.py,test_unknown_unavailable_source[unavailable],12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B16 B20 B21
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s3.py,test_unknown_unavailable_source[unknown],12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B16 B20 B21
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s3.py,test_upper_boundary_is_off,10,B01 B03 B05 B06 B08 B09 B13 B15 B20 B22
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s3.py,test_upper_turns_on_above,14,B01 B03 B05 B06 B08 B09 B11 B13 B15 B20 B21 B22 B31 B32
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s4.py,test_boundary_value_keeps_previous_state,12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B20 B21 B22
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s4.py,test_config_entry_setup,12,B04 B05 B06 B08 B09 B13 B15 B17 B18 B37 B38 B39
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s4.py,test_config_entry_unload,12,B04 B05 B06 B08 B09 B13 B15 B20 B21 B37 B38 B39
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s4.py,test_extra_state_attributes_range_type,9,B01 B03 B06 B08 B09 B13 B15 B23 B26
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s4.py,test_extra_state_attributes_upper_only,10,B01 B03 B05 B06 B08 B09 B13 B15 B20 B21
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s4.py,test_lower_hysteresis_latches,12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B17 B18 B19
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s4.py,test_lower_threshold_initial_values[10-off-above],10,B01 B03 B05 B06 B08 B09 B13 B15 B17 B19
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s4.py,test_lower_threshold_initial_values[15-off-above],10,B01 B03 B05 B06 B08 B09 B13 B15 B17 B19
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s4.py,test_lower_threshold_initial_values[5-on-below],12,B01 B03 B05 B06 B08 B09 B13 B15 B17 B18 B31 B32
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s4.py,test_missing_source_entity_is_unknown_then_recovers,11,B01 B03 B05 B06 B08 B09 B11 B13 B15 B20 B21
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s4.py,test_no_missing_threshold_accepts_zero,1,B01
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s4.py,test_no_missing_threshold_rejects_none_values,1,B01
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s4.py,test_non_numeric_source_logs_warning,10,B01 B03 B05 B06 B08 B09 B10 B13 B15 B16
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s4.py,test_platform_schema_defaults_and_coercion,1,B01
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s4.py,test_platform_schema_requires_a_threshold,1,B01
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s4.py,test_platform_schema_requires_entity_id,0,
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s4.py,test_preview_reports_state_and_updates,12,B05 B06 B08 B09 B11 B12 B13 B15 B20 B21 B22 B28
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s4.py,test_preview_without_thresholds_is_unavailable,3,B05 B06 B27
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s4.py,test_range_hysteresis,12,B01 B03 B06 B08 B09 B11 B13 B15 B23 B24 B25 B26
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s4.py,test_range_threshold_initial_values[10-on-in_range],9,B01 B03 B06 B08 B09 B13 B15 B23 B26
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s4.py,test_range_threshold_initial_values[15-on-in_range],9,B01 B03 B06 B08 B09 B13 B15 B23 B26
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s4.py,test_range_threshold_initial_values[20-on-in_range],9,B01 B03 B06 B08 B09 B13 B15 B23 B26
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s4.py,test_range_threshold_initial_values[25-off-above],9,B01 B03 B06 B08 B09 B13 B15 B23 B25
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s4.py,test_range_threshold_initial_values[5-off-below],10,B01 B03 B06 B08 B09 B13 B15 B23 B24 B26
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s4.py,test_state_follows_source_changes,12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B20 B21 B22
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s4.py,test_threshold_type[0.0-None-lower],1,B05
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s4.py,test_threshold_type[1.0-2.0-range],0,
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s4.py,test_threshold_type[1.0-None-lower],1,B05
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s4.py,test_threshold_type[None-2.0-upper],1,B05
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s4.py,test_unknown_and_unavailable_source[unavailable],12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B16 B20 B21
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s4.py,test_unknown_and_unavailable_source[unknown],12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B16 B20 B21
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s4.py,test_upper_hysteresis_latches,12,B01 B03 B05 B06 B08 B09 B11 B13 B15 B20 B21 B22
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s4.py,test_upper_threshold_initial_values[10-off-below],10,B01 B03 B05 B06 B08 B09 B13 B15 B20 B22
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s4.py,test_upper_threshold_initial_values[15-on-above],10,B01 B03 B05 B06 B08 B09 B13 B15 B20 B21
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s4.py,test_upper_threshold_initial_values[5-off-below],10,B01 B03 B05 B06 B08 B09 B13 B15 B20 B22
+main_sonnet55_v1,test_binary_sensor__sonnet-5-5__s4.py,test_yaml_name_and_device_class,10,B01 B03 B05 B06 B08 B09 B13 B15 B20 B21
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s0.py,test_async_config_entry_title_uses_name,1,B31
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s0.py,test_config_entry_minor_version,0,
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s0.py,test_flow_steps_define_preview,0,
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s0.py,test_options_flow_updates_limits,2,B29 B39
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s0.py,test_options_flow_without_limits_shows_error,2,B29 B39
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s0.py,test_user_flow_error_can_be_corrected,3,B29 B31 B39
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s0.py,test_user_flow_lower_only_creates_entry,3,B29 B31 B39
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s0.py,test_user_flow_range_creates_entry,3,B29 B31 B39
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s0.py,test_user_flow_upper_only_default_hysteresis,3,B29 B31 B39
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s0.py,test_user_flow_without_limits_shows_error,1,B29
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s0.py,test_validate_mode_fills_missing_limit_with_none,1,B29
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s0.py,test_validate_mode_rejects_missing_limits,1,B29
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s0.py,test_validate_mode_zero_limit_is_valid,1,B29
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s1.py,test_async_config_entry_title_uses_name,1,B31
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s1.py,test_flow_steps_define_preview,0,
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s1.py,test_handler_versions,0,
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s1.py,test_options_flow_error_without_limits,1,B29
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s1.py,test_options_flow_shows_form,0,
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s1.py,test_options_flow_updates_options,2,B29 B39
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s1.py,test_user_flow_creates_entry_with_lower,3,B29 B31 B39
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s1.py,test_user_flow_creates_entry_with_upper,3,B29 B31 B39
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s1.py,test_user_flow_error_without_limits,1,B29
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s1.py,test_user_flow_range,3,B29 B31 B39
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s1.py,test_user_flow_recovers_after_error,3,B29 B31 B39
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s1.py,test_user_flow_shows_form,0,
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s1.py,test_user_flow_zero_limit_is_valid,3,B29 B31 B39
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s1.py,test_validate_mode_fills_missing_limit_with_none,1,B29
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s1.py,test_validate_mode_keeps_both_limits,1,B29
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s1.py,test_validate_mode_rejects_missing_limits,1,B29
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s2.py,test_async_config_entry_title_uses_name,1,B31
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s2.py,test_flow_definitions,0,
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s2.py,test_options_flow_missing_limits_error,2,B29 B39
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s2.py,test_options_flow_shows_form,1,B39
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s2.py,test_options_flow_updates_options,2,B29 B39
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s2.py,test_user_flow_boundary_zero_limit_is_valid,3,B29 B31 B39
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s2.py,test_user_flow_default_hysteresis,3,B29 B31 B39
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s2.py,test_user_flow_lower_only_creates_entry,3,B29 B31 B39
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s2.py,test_user_flow_missing_limits_error,1,B29
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s2.py,test_user_flow_range_creates_entry,3,B29 B31 B39
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s2.py,test_user_flow_recovers_after_error,3,B29 B31 B39
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s2.py,test_user_flow_upper_only_creates_entry,3,B29 B31 B39
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s2.py,test_user_step_shows_form,0,
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s2.py,test_validate_mode_fills_missing_limit_with_none,1,B29
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s2.py,test_validate_mode_keeps_explicit_values,1,B29
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s2.py,test_validate_mode_raises_without_limits,1,B29
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s3.py,test_create_entry_with_lower_only,3,B29 B31 B39
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s3.py,test_create_entry_with_range_and_default_hysteresis,3,B29 B31 B39
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s3.py,test_create_entry_with_upper_only,3,B29 B31 B39
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s3.py,test_flow_definitions_use_preview,0,
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s3.py,test_minor_version,0,
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s3.py,test_options_flow_error_without_limits,2,B29 B39
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s3.py,test_options_flow_shows_form,1,B39
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s3.py,test_options_flow_updates_limits,2,B29 B39
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s3.py,test_title_comes_from_name,1,B31
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s3.py,test_user_step_error_without_limits,1,B29
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s3.py,test_user_step_recovers_after_error,3,B29 B31 B39
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s3.py,test_user_step_shows_form,0,
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s3.py,test_validate_mode_accepts_zero_limit,1,B29
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s3.py,test_validate_mode_fills_missing_limit_with_none,1,B29
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s3.py,test_validate_mode_keeps_both_limits,1,B29
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s3.py,test_validate_mode_rejects_missing_limits,1,B29
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s4.py,test_async_config_entry_title_uses_name,1,B31
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s4.py,test_entry_has_minor_version_2,3,B29 B31 B39
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s4.py,test_flow_definitions_enable_preview,0,
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s4.py,test_options_flow_shows_form,0,
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s4.py,test_options_flow_without_limits_errors,1,B29
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s4.py,test_preview_config_flow_sends_attributes,13,B05 B06 B08 B09 B12 B13 B15 B20 B22 B28 B33 B35 B36
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s4.py,test_preview_non_numeric_state_is_unknown,13,B05 B06 B08 B09 B10 B12 B13 B15 B16 B28 B33 B35 B36
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s4.py,test_preview_options_flow_uses_entry,13,B05 B06 B08 B09 B12 B13 B15 B20 B21 B28 B34 B35 B36
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s4.py,test_preview_turns_on_when_above_upper,13,B05 B06 B08 B09 B12 B13 B15 B20 B21 B28 B33 B35 B36
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s4.py,test_preview_updates_on_state_change,15,B05 B06 B08 B09 B11 B12 B13 B15 B17 B18 B19 B28 B33 B35 B36
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s4.py,test_user_flow_lower_only_creates_entry,3,B29 B31 B39
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s4.py,test_user_flow_range_and_default_hysteresis,3,B29 B31 B39
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s4.py,test_user_flow_recovers_after_error,3,B29 B31 B39
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s4.py,test_user_flow_upper_only_creates_entry,3,B29 B31 B39
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s4.py,test_user_flow_without_limits_errors,1,B29
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s4.py,test_user_flow_zero_limit_is_accepted,3,B29 B31 B39
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s4.py,test_user_step_shows_form,0,
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s4.py,test_validate_mode_fills_missing_limits,1,B29
+main_sonnet55_v1,test_config_flow__sonnet-5-5__s4.py,test_validate_mode_raises_without_limits,1,B29
+main_sonnet55_v1,test_init__sonnet-5-5__s0.py,test_migrate_minor_1_to_2_updates_version_and_keeps_options,1,B40
+main_sonnet55_v1,test_init__sonnet-5-5__s0.py,test_migrate_minor_1_without_source_device_does_not_remove_helpers,1,B40
+main_sonnet55_v1,test_init__sonnet-5-5__s0.py,test_migrate_minor_2_skips_device_cleanup,1,B40
+main_sonnet55_v1,test_init__sonnet-5-5__s0.py,test_migrate_unknown_future_version_returns_true_unchanged,0,
+main_sonnet55_v1,test_init__sonnet-5-5__s0.py,test_setup_entry_follows_source_entity_rename,12,B04 B05 B06 B08 B09 B13 B15 B17 B19 B37 B38 B39
+main_sonnet55_v1,test_init__sonnet-5-5__s0.py,test_setup_entry_forwards_only_binary_sensor_platform,3,B37 B38 B39
+main_sonnet55_v1,test_init__sonnet-5-5__s0.py,test_setup_entry_loads_and_creates_binary_sensor,16,B04 B05 B06 B07 B08 B09 B13 B14 B15 B17 B19 B31 B32 B37 B38 B39
+main_sonnet55_v1,test_init__sonnet-5-5__s0.py,test_setup_entry_sensor_turns_on_below_lower,12,B04 B05 B06 B08 B09 B13 B15 B17 B18 B37 B38 B39
+main_sonnet55_v1,test_init__sonnet-5-5__s0.py,test_setup_runs_migration_for_old_entry,13,B04 B05 B06 B08 B09 B13 B15 B17 B18 B37 B38 B39 B40
+main_sonnet55_v1,test_init__sonnet-5-5__s0.py,test_unload_entry_delegates_to_unload_platforms,1,B39
+main_sonnet55_v1,test_init__sonnet-5-5__s0.py,test_unload_entry_unloads_and_marks_entity_unavailable,12,B04 B05 B06 B08 B09 B13 B15 B17 B19 B37 B38 B39
+main_sonnet55_v1,test_init__sonnet-5-5__s1.py,test_migrate_minor_version_1_to_2_updates_version,1,B40
+main_sonnet55_v1,test_init__sonnet-5-5__s1.py,test_migrate_preserves_options,1,B40
+main_sonnet55_v1,test_init__sonnet-5-5__s1.py,test_migrate_without_source_device_skips_removal,1,B40
+main_sonnet55_v1,test_init__sonnet-5-5__s1.py,test_reload_entry_restores_sensor,12,B04 B05 B06 B08 B09 B13 B15 B20 B21 B37 B38 B39
+main_sonnet55_v1,test_init__sonnet-5-5__s1.py,test_setup_entry_below_upper_threshold_is_off,12,B04 B05 B06 B08 B09 B13 B15 B20 B22 B37 B38 B39
+main_sonnet55_v1,test_init__sonnet-5-5__s1.py,test_setup_entry_follows_source_entity_rename,12,B04 B05 B06 B08 B09 B13 B15 B20 B22 B37 B38 B39
+main_sonnet55_v1,test_init__sonnet-5-5__s1.py,test_setup_entry_forwards_only_binary_sensor_platform,3,B37 B38 B39
+main_sonnet55_v1,test_init__sonnet-5-5__s1.py,test_setup_entry_loads_and_creates_binary_sensor,16,B04 B05 B06 B07 B08 B09 B13 B14 B15 B20 B21 B31 B32 B37 B38 B39
+main_sonnet55_v1,test_init__sonnet-5-5__s1.py,test_setup_runs_migration_and_loads[1],13,B04 B05 B06 B08 B09 B13 B15 B20 B22 B37 B38 B39 B40
+main_sonnet55_v1,test_init__sonnet-5-5__s1.py,test_setup_runs_migration_and_loads[2],12,B04 B05 B06 B08 B09 B13 B15 B20 B22 B37 B38 B39
+main_sonnet55_v1,test_init__sonnet-5-5__s1.py,test_unload_entry_returns_true_for_loaded_entry,12,B04 B05 B06 B08 B09 B13 B15 B20 B22 B37 B38 B39
+main_sonnet55_v1,test_init__sonnet-5-5__s1.py,test_unload_entry_unloads_and_removes_entity_state,12,B04 B05 B06 B08 B09 B13 B15 B20 B22 B37 B38 B39
+main_sonnet55_v1,test_init__sonnet-5-5__s2.py,test_migrate_current_minor_version_skips_removal,1,B40
+main_sonnet55_v1,test_init__sonnet-5-5__s2.py,test_migrate_minor_1_to_2_via_setup,13,B04 B05 B06 B08 B09 B13 B15 B20 B21 B37 B38 B39 B40
+main_sonnet55_v1,test_init__sonnet-5-5__s2.py,test_migrate_preserves_options,1,B40
+main_sonnet55_v1,test_init__sonnet-5-5__s2.py,test_migrate_removes_helper_devices_from_source_device,1,B40
+main_sonnet55_v1,test_init__sonnet-5-5__s2.py,test_migrate_unknown_future_version_is_left_untouched,0,
+main_sonnet55_v1,test_init__sonnet-5-5__s2.py,test_migrate_without_source_device_skips_removal,1,B40
+main_sonnet55_v1,test_init__sonnet-5-5__s2.py,test_setup_entry_loads_and_creates_binary_sensor,16,B04 B05 B06 B07 B08 B09 B13 B14 B15 B20 B21 B31 B32 B37 B38 B39
+main_sonnet55_v1,test_init__sonnet-5-5__s2.py,test_setup_entry_registers_source_entity_tracking,12,B04 B05 B06 B08 B09 B13 B15 B20 B22 B37 B38 B39
+main_sonnet55_v1,test_init__sonnet-5-5__s2.py,test_source_entity_change_callback_updates_options_and_reloads,12,B04 B05 B06 B08 B09 B13 B15 B20 B22 B37 B38 B39
+main_sonnet55_v1,test_init__sonnet-5-5__s2.py,test_unload_entry_unloads_and_runs_cleanup,12,B04 B05 B06 B08 B09 B13 B15 B20 B21 B37 B38 B39
+main_sonnet55_v1,test_init__sonnet-5-5__s3.py,test_component_setup_with_entry,12,B04 B05 B06 B08 B09 B13 B15 B20 B22 B37 B38 B39
+main_sonnet55_v1,test_init__sonnet-5-5__s3.py,test_migrate_current_minor_version_is_noop,1,B40
+main_sonnet55_v1,test_init__sonnet-5-5__s3.py,test_migrate_minor_1_to_2_updates_version,13,B04 B05 B06 B08 B09 B13 B15 B20 B21 B37 B38 B39 B40
+main_sonnet55_v1,test_init__sonnet-5-5__s3.py,test_migrate_unknown_version_returns_true_unchanged,0,
+main_sonnet55_v1,test_init__sonnet-5-5__s3.py,test_migrate_without_source_device_skips_removal,1,B40
+main_sonnet55_v1,test_init__sonnet-5-5__s3.py,test_reload_entry_restores_sensor,12,B04 B05 B06 B08 B09 B13 B15 B20 B21 B37 B38 B39
+main_sonnet55_v1,test_init__sonnet-5-5__s3.py,test_setup_entry_below_upper_is_off,12,B04 B05 B06 B08 B09 B13 B15 B20 B22 B37 B38 B39
+main_sonnet55_v1,test_init__sonnet-5-5__s3.py,test_setup_entry_creates_binary_sensor,16,B04 B05 B06 B07 B08 B09 B13 B14 B15 B20 B21 B31 B32 B37 B38 B39
+main_sonnet55_v1,test_init__sonnet-5-5__s3.py,test_setup_entry_tracks_source_changes,14,B04 B05 B06 B08 B09 B11 B13 B15 B20 B21 B22 B37 B38 B39
+main_sonnet55_v1,test_init__sonnet-5-5__s3.py,test_source_entity_rename_updates_options,12,B04 B05 B06 B08 B09 B13 B15 B20 B21 B37 B38 B39
+main_sonnet55_v1,test_init__sonnet-5-5__s3.py,test_unload_entry_unloads_platform,12,B04 B05 B06 B08 B09 B13 B15 B20 B21 B37 B38 B39
+main_sonnet55_v1,test_init__sonnet-5-5__s4.py,test_async_setup_entry_returns_true,2,B37 B38
+main_sonnet55_v1,test_init__sonnet-5-5__s4.py,test_migrate_current_minor_does_not_remove_devices,1,B40
+main_sonnet55_v1,test_init__sonnet-5-5__s4.py,test_migrate_minor_1_removes_helper_devices_for_source_device,1,B40
+main_sonnet55_v1,test_init__sonnet-5-5__s4.py,test_migrate_minor_1_updates_minor_version,1,B40
+main_sonnet55_v1,test_init__sonnet-5-5__s4.py,test_migrate_minor_1_without_source_device_skips_removal,1,B40
+main_sonnet55_v1,test_init__sonnet-5-5__s4.py,test_migrate_unknown_future_version_is_left_untouched,0,
+main_sonnet55_v1,test_init__sonnet-5-5__s4.py,test_setup_entry_boundary_values[14-off],12,B04 B05 B06 B08 B09 B13 B15 B20 B22 B37 B38 B39
+main_sonnet55_v1,test_init__sonnet-5-5__s4.py,test_setup_entry_boundary_values[15-off],12,B04 B05 B06 B08 B09 B13 B15 B20 B22 B37 B38 B39
+main_sonnet55_v1,test_init__sonnet-5-5__s4.py,test_setup_entry_boundary_values[15.1-on],12,B04 B05 B06 B08 B09 B13 B15 B20 B21 B37 B38 B39
+main_sonnet55_v1,test_init__sonnet-5-5__s4.py,test_setup_entry_loads_and_creates_binary_sensor_off,16,B04 B05 B06 B07 B08 B09 B13 B14 B15 B20 B22 B31 B32 B37 B38 B39
+main_sonnet55_v1,test_init__sonnet-5-5__s4.py,test_setup_entry_missing_entity_id_option_fails,1,B37
+main_sonnet55_v1,test_init__sonnet-5-5__s4.py,test_setup_entry_registers_source_entity_change_handler,12,B04 B05 B06 B08 B09 B13 B15 B20 B22 B37 B38 B39
+main_sonnet55_v1,test_init__sonnet-5-5__s4.py,test_setup_entry_sensor_follows_source_changes,14,B04 B05 B06 B08 B09 B11 B13 B15 B20 B21 B22 B37 B38 B39
+main_sonnet55_v1,test_init__sonnet-5-5__s4.py,test_setup_entry_sensor_on_when_above_upper,12,B04 B05 B06 B08 B09 B13 B15 B20 B21 B37 B38 B39
+main_sonnet55_v1,test_init__sonnet-5-5__s4.py,test_setup_entry_unsubscribes_change_handler_on_unload,12,B04 B05 B06 B08 B09 B13 B15 B20 B22 B37 B38 B39
+main_sonnet55_v1,test_init__sonnet-5-5__s4.py,test_setup_entry_updates_options_when_source_entity_renamed,12,B04 B05 B06 B08 B09 B13 B15 B20 B22 B37 B38 B39
+main_sonnet55_v1,test_init__sonnet-5-5__s4.py,test_unload_entry_returns_platform_unload_result,1,B39
+main_sonnet55_v1,test_init__sonnet-5-5__s4.py,test_unload_entry_unloads_platform,12,B04 B05 B06 B08 B09 B13 B15 B20 B22 B37 B38 B39

@@ -169,9 +169,21 @@ def _cmd_smells(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_relevance(args: argparse.Namespace) -> int:
+    from .behaviours import run_behaviours
+    from .config import load_settings
+
+    st = load_settings()
+    _, _, targets = _suite_units(st, args.suite)
+    for r in run_behaviours(st, args.suite, targets):
+        print(r)
+    return 0
+
+
 IMPLEMENTED: dict[str, object] = {
     "generate": _cmd_generate, "execute": _cmd_execute, "coverage": _cmd_coverage,
     "mutate": _cmd_mutate, "traceability": _cmd_traceability, "smells": _cmd_smells,
+    "relevance": _cmd_relevance,
 }
 
 
@@ -196,6 +208,8 @@ def build_parser() -> argparse.ArgumentParser:
         if name == "traceability":
             p.add_argument("--suite", required=True, help="'developer' or a run id")
         if name == "smells":
+            p.add_argument("--suite", required=True, help="'developer' or a run id")
+        if name == "relevance":
             p.add_argument("--suite", required=True, help="'developer' or a run id")
         if name == "generate":
             p.add_argument("--model", action="append", help="model id (repeatable); default main")
