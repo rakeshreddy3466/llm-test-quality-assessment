@@ -21,6 +21,7 @@ SUBCOMMANDS: dict[str, tuple[int, str]] = {
     "review-sample": (9, "Build the blinded manual-review sample"),
     "metamorphic": (10, "Metamorphic experiment (MR1..MR4) vs noise floor"),
     "report": (11, "Build tables and figures from results/*.csv"),
+    "rq2-prepare": (9, "Automatic scores of the 60 sampled tests (per-test mutation runs)"),
 }
 
 
@@ -229,11 +230,20 @@ def _cmd_report(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_rq2_prepare(args: argparse.Namespace) -> int:
+    from .config import load_settings
+    from .rq2 import prepare_auto
+
+    print(prepare_auto(load_settings()))
+    return 0
+
+
 IMPLEMENTED: dict[str, object] = {
     "generate": _cmd_generate, "execute": _cmd_execute, "coverage": _cmd_coverage,
     "mutate": _cmd_mutate, "traceability": _cmd_traceability, "smells": _cmd_smells,
     "relevance": _cmd_relevance, "review-sample": _cmd_review_sample,
     "metamorphic": _cmd_metamorphic, "report": _cmd_report,
+    "rq2-prepare": _cmd_rq2_prepare,
 }
 
 

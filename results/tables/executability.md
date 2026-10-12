@@ -7,6 +7,9 @@
 | mr_mr1a_binary_sensor | 5/5 | 100.0 % | 128 | 100.0 % | 100.0 % | 0.0 % |
 | mr_mr1b_binary_sensor | 5/5 | 100.0 % | 160 | 100.0 % | 100.0 % | 0.0 % |
 | mr_mr1c_binary_sensor | 5/5 | 100.0 % | 117 | 100.0 % | 100.0 % | 0.0 % |
+| mr_mr2_binary_sensor | 5/5 | 100.0 % | 160 | 100.0 % | 100.0 % | 0.0 % |
+| mr_mr3_binary_sensor | 5/5 | 100.0 % | 190 | 100.0 % | 100.0 % | 0.0 % |
+| mr_mr4_binary_sensor | 5/5 | 100.0 % | 146 | 100.0 % | 100.0 % | 0.0 % |
 
 **Failure types of non-passing tests**
 

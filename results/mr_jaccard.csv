@@ -1,0 +1,15 @@
+suite,variant,kind,noise_floor_mean,cross_mean,n_noise,n_cross,mwu_p,cliffs_delta
+mr1a,mr1a,jaccard_lines,1.0,0.9898,10,25,0.1401,-0.2
+mr1a,mr1a,jaccard_killed,0.9247,0.9165,10,25,0.7284,-0.08
+mr1b,mr1b,jaccard_lines,1.0,1.0,10,25,1.0,0.0
+mr1b,mr1b,jaccard_killed,0.9247,0.9463,10,25,0.1293,0.336
+mr1c,mr1c,jaccard_lines,1.0,0.9946,10,25,0.1401,-0.2
+mr1c,mr1c,jaccard_killed,0.9247,0.9222,10,25,1.0,0.0
+mr2,mr2,jaccard_lines,1.0,0.9933,10,25,0.1401,-0.2
+mr2,mr2,jaccard_killed,0.9247,0.9439,10,25,0.2208,0.272
+mr3,mr3,jaccard_lines,1.0,1.0,10,25,1.0,0.0
+mr3,mr3,jaccard_killed,0.9247,0.9423,10,25,0.2341,0.264
+mr4,mr4,jaccard_lines,1.0,0.9933,10,25,0.1401,-0.2
+mr4,mr4,jaccard_killed,0.9247,0.9422,10,25,0.2206,0.272
+mr1_pooled,mr1_pooled,jaccard_lines,1.0,0.9948,10,75,0.2273,-0.1333
+mr1_pooled,mr1_pooled,jaccard_killed,0.9247,0.9283,10,75,0.6672,0.0853

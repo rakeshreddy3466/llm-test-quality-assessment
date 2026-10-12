@@ -85,7 +85,8 @@ def _populate_tree(settings: Settings, root: Path, *, real_component: bool) -> N
 
 
 def build_workspace(
-    settings: Settings, test_files: list[Path], *, deselect: list[str], with_snapshots: bool
+    settings: Settings, test_files: list[Path], *, deselect: list[str], with_snapshots: bool,
+    select: str | None = None,
 ) -> Path:
     """Fresh workspace holding the given test files (and nothing else) for threshold."""
     comp = settings.config["ha"]["component"]
@@ -128,7 +129,7 @@ def build_workspace(
         pytest_cfg
         + "\n[tool.mutmut]\n"
         + f'source_paths = ["homeassistant/components/{comp}"]\n'
-        + f'pytest_add_cli_args_test_selection = ["tests/components/{comp}"]\n'
+        + f'pytest_add_cli_args_test_selection = ["{select or f"tests/components/{comp}"}"]\n'
         + f"pytest_add_cli_args = [{', '.join(args)}]\n"
         + "mutate_only_covered_lines = false\n",
         encoding="utf-8",

@@ -40,3 +40,12 @@ def test_agreement_table_from_files(tmp_path):
             w.writerow([item, i % 5 + 1, 3, 3, 3])
     out = agreement_table(rated, auto)
     assert "| relevance | 6 | 1.000" in out
+
+
+def test_rq2_bins():
+    from testquality.rq2 import bin_clarity, bin_maintainability, bin_oracle, bin_relevance
+
+    assert [bin_relevance(n) for n in (0, 1, 4, 9)] == [1, 2, 5, 5]
+    assert [bin_clarity(x) for x in (0.0, 0.5, 1.0)] == [1, 3, 5]
+    assert [bin_maintainability(x) for x in (0, 1, 2.4, 9)] == [5, 4, 3, 1]
+    assert [bin_oracle(x) for x in (0.0, 0.05, 0.15, 0.3, 0.9)] == [1, 2, 3, 4, 5]

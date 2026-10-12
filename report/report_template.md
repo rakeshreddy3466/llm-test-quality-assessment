@@ -160,7 +160,9 @@ and $k = 5$ samples per prompt: results may not carry over to other components, 
 models. The model may have seen Home Assistant tests during training, so the isolation of the
 developer tests applies to the prompt, not to the model's knowledge. The metamorphic experiment
 uses a single target module and five samples per variant, so its statistical power is low; "no
-significant difference" must not be read as "equivalent".
+significant difference" must not be read as "equivalent". Several metrics and variants are tested
+at once without correction for multiple comparisons, so isolated p-values below 0.05 are weak
+evidence.
 
 *Conclusion validity.* Rates over parametrised tests weigh heavily parametrised files more.
 Agreement statistics for RQ2 depend on one rater and on the binning of automatic scores.

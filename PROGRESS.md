@@ -12,10 +12,10 @@ Read `docs/PLAN.md` first. Update this file at the end of every phase.
 | 7 | Test smells | done |
 | 8 | Relevance & completeness | done (behaviours.yaml is DRAFT) |
 | 9 | Manual review sample (STOP for user) | sample built; WAITING for user ratings (manual_review/sample_rated.csv) |
-| 10 | Metamorphic experiment | variants generated (6 x binary_sensor k=5, $2.68); evaluation running -> results/mr_*.csv |
-| 11 | Results/report.py/make all | todo |
-| 12 | CI | todo |
-| 13 | Report | todo |
+| 10 | Metamorphic experiment | done (results/mr_*.csv) |
+| 11 | Results/report.py/make all | done (`make all`) |
+| 12 | CI | done (green on Python 3.12 + 3.14) |
+| 13 | Report | done: report/report.md + report.pdf + refs.bib (15 refs verified via Crossref); RQ2 pending ratings |
 
 ## Notes for next session
 - `.env` has HA_PYTHON set to the `.venv` interpreter. Do not print `.env`.
@@ -33,3 +33,5 @@ Read `docs/PLAN.md` first. Update this file at the end of every phase.
 - NEXT: Phase 9 manual review sample, then STOP and tell the user.
 - Phase 9: manual_review/rubric.md, sample_blinded.csv (60 items: 20 developer, 40 LLM; seed 20261012), key_do_not_open_until_rated.csv. Assistant must NEVER fill ratings. User saves ratings as manual_review/sample_rated.csv. RQ2 stays 'pending manual review' until then. Meanwhile phases 10-12 proceed.
 - Phase 10: runs data/runs/mr_<variant>_binary_sensor (mr1a,b,c paraphrases; mr2 rename locals; mr3 reorder; mr4 strip comments). Evaluate: `uv run testquality metamorphic --evaluate --compare` (~45 min, uses HA tree + work/ workspace: do not run other HA commands concurrently). Compare only: `uv run testquality metamorphic --compare`.
+- Phases 11-13: `make all` rebuilds results/tables, results/figures, report/report.md, report/report.pdf (pandoc+typst) and the README results block from results/*.csv. `uv run testquality rq2-prepare` computes automatic scores for the 60 sampled tests (results/rq2_auto.csv, per-test mutation runs, ~30-40 min). Once the user saves manual_review/sample_rated.csv, `make all` fills the RQ2 table automatically.
+- REMAINING FOR USER: rate manual_review/sample_blinded.csv -> save as manual_review/sample_rated.csv; human check of data/behaviours.yaml; review TO VERIFY notes in report/refs.bib.

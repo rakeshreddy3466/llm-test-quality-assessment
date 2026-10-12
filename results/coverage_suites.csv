@@ -11,3 +11,9 @@ mr_mr1b_binary_sensor,all,0.8659,0.7759,213,246,45,58,160
 mr_mr1b_binary_sensor,target:binary_sensor,0.8659,0.7759,213,246,45,58,160
 mr_mr1c_binary_sensor,all,0.8659,0.7759,213,246,45,58,117
 mr_mr1c_binary_sensor,target:binary_sensor,0.8659,0.7759,213,246,45,58,117
+mr_mr2_binary_sensor,all,0.8659,0.7759,213,246,45,58,160
+mr_mr2_binary_sensor,target:binary_sensor,0.8659,0.7759,213,246,45,58,160
+mr_mr3_binary_sensor,all,0.8659,0.7759,213,246,45,58,190
+mr_mr3_binary_sensor,target:binary_sensor,0.8659,0.7759,213,246,45,58,190
+mr_mr4_binary_sensor,all,0.8659,0.7759,213,246,45,58,146
+mr_mr4_binary_sensor,target:binary_sensor,0.8659,0.7759,213,246,45,58,146

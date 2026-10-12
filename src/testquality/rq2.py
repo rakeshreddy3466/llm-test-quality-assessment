@@ -55,3 +55,97 @@ def agreement_table(rated: Path, auto: Path) -> str:
         lines.append(f"| {scale} | {len(pairs)} | {rho:.3f} | {p:.3f} | "
                      f"{weighted_kappa(x, y):.3f} |")
     return "\n".join(lines) + "\n"
+
+
+# --------------------------------------------------------------------------------------------
+# Automatic scores for the 60 sampled tests (inputs of the RQ2 comparison)
+# --------------------------------------------------------------------------------------------
+AUTO_FIELDS = ["item_id", "n_cases", "behaviours", "trace_name", "smells", "killed", "killed_frac",
+               "auto_relevance", "auto_clarity", "auto_maintainability", "auto_oracle"]
+
+
+def bin_relevance(n_behaviours: int) -> int:
+    return min(5, n_behaviours + 1)
+
+
+def bin_clarity(trace: float) -> int:
+    return 1 + round(4 * trace)
+
+
+def bin_maintainability(smells: float) -> int:
+    return max(1, 5 - round(smells))
+
+
+def bin_oracle(killed_frac: float) -> int:
+    for limit, score in ((0.0, 1), (0.10, 2), (0.20, 3), (0.35, 4)):
+        if killed_frac <= limit:
+            return score
+    return 5
+
+
+def prepare_auto(settings) -> Path:
+    """Per sampled test function: behaviours mapped, trace score, smells, mutants it kills alone.
+
+    The origin key is read only to locate the test; it is never written to the output.
+    """
+    from .coverage_tool import stable_pass_set
+    from .mutation_tool import (
+        build_workspace,
+        classify,
+        failing_deselects,
+        run_mutmut,
+    )
+    from .suites import suite_units
+
+    res = settings.results_dir
+    key_path = settings.project_root / "manual_review" / "key_do_not_open_until_rated.csv"
+    with open(key_path, newline="", encoding="utf-8") as fh:
+        key = list(csv.DictReader(fh))
+
+    def rows(name: str, suite: str) -> list[dict]:
+        p = res / name
+        if not p.exists():
+            return []
+        with open(p, newline="", encoding="utf-8") as fh:
+            return [r for r in csv.DictReader(fh) if r["suite"] == suite]
+
+    comp = settings.config["ha"]["component"]
+    out_rows = []
+    for k in key:
+        suite, unit, func = k["suite"], k["unit"], k["test"]
+        beh = [r for r in rows("behaviour_tests.csv", suite)
+               if r["unit"] == unit and r["test"].split("[")[0] == func]
+        trace = [float(r["trace_name"]) for r in rows("trace_tests.csv", suite)
+                 if r["unit"] == unit and r["test"].split("[")[0] == func and r["valid"] == "1"]
+        smell = [int(r["total"]) for r in rows("smells_tests.csv", suite)
+                 if r["unit"] == unit and r["test"].split("[")[0] == func and r["valid"] == "1"]
+        units, _, _ = suite_units(settings, suite)
+        path = next(u for u in units if u.name == unit)
+        stable = stable_pass_set(settings, suite)
+        deselect = [d for d in failing_deselects(settings, suite, path, stable)
+                    if d.split("::")[1].split("[")[0] == func]
+        ws = build_workspace(
+            settings, [path], deselect=deselect, with_snapshots=suite == "developer",
+            select=f"tests/components/{comp}/{unit}::{func}",
+        )
+        results, _, _ = run_mutmut(settings, ws)
+        statuses = classify(results)
+        total = len(statuses)
+        killed = sum(1 for s in statuses.values() if s == "killed")
+        frac = killed / total if total else 0.0
+        n_beh = max((int(r["n_behaviours"]) for r in beh), default=0)
+        tr = sum(trace) / len(trace) if trace else 0.0
+        sm = sum(smell) / len(smell) if smell else 0.0
+        out_rows.append({
+            "item_id": k["item_id"], "n_cases": len(beh), "behaviours": n_beh,
+            "trace_name": round(tr, 4), "smells": round(sm, 4), "killed": killed,
+            "killed_frac": round(frac, 4), "auto_relevance": bin_relevance(n_beh),
+            "auto_clarity": bin_clarity(tr), "auto_maintainability": bin_maintainability(sm),
+            "auto_oracle": bin_oracle(frac),
+        })
+    path = res / "rq2_auto.csv"
+    with open(path, "w", newline="", encoding="utf-8") as fh:
+        w = csv.DictWriter(fh, fieldnames=AUTO_FIELDS)
+        w.writeheader()
+        w.writerows(sorted(out_rows, key=lambda r: r["item_id"]))
+    return path
