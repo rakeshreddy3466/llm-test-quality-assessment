@@ -10,7 +10,7 @@ Read `docs/PLAN.md` first. Update this file at the end of every phase.
 | 5 | Mutation testing | done (mutmut 3.8 works; developer + main_sonnet55_v1) |
 | 6 | Traceability | done (docs/metrics.md written first) |
 | 7 | Test smells | done |
-| 8 | Relevance & completeness | todo |
+| 8 | Relevance & completeness | done (behaviours.yaml is DRAFT) |
 | 9 | Manual review sample (STOP for user) | todo |
 | 10 | Metamorphic experiment | todo |
 | 11 | Results/report.py/make all | todo |
@@ -29,3 +29,5 @@ Read `docs/PLAN.md` first. Update this file at the end of every phase.
 - config_flow samples mostly only touch config_flow.py functions (~10 mutants), hence tiny global scores: real, not a bug.
 - Phase 6: `uv run testquality traceability --suite developer|<run_id>` -> results/trace_tests.csv, trace_summary.csv. Plugin plugins/_tq_trace.py runs inside HA python. developer trace_name 0.378; LLM trace_name 0.301, trace_declared 0.533.
 - Phase 7: `uv run testquality smells --suite developer|<run_id>` -> results/smells_{tests,summary}.csv. Parametrised cases weight each function by its case count (developer file is heavily parametrised: roulette/conditional logic from loops over `vals`).
+- Phase 8: data/behaviours.yaml = 40 behaviours, DRAFT needs human check (ranges for tag 2026.10.1). `uv run testquality relevance --suite <s>` needs results/cache/coverage_<s>.json (run `coverage` first). 38 reachable behaviours (2 module-level excluded); developer completeness 1.0 by construction.
+- NEXT: Phase 9 manual review sample, then STOP and tell the user.

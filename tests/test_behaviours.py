@@ -53,7 +53,7 @@ def test_map_tests_threshold_half_of_statements():
 def test_import_time_lines_and_reachability(tmp_path: Path):
     f = tmp_path / "m.py"
     f.write_text(SRC)
-    assert {2, 4, 7, 12, 13, 15} <= import_time_lines(f)
+    assert {2, 4, 7, 13, 14, 16} <= import_time_lines(f)
     assert 8 not in import_time_lines(f)
     cache = {"u.py": {"tests": {"t": {"m.py": {"lines": [4, 8, 9, 10]}}}}}
     reach = reachable_behaviours(B, STM, cache, tmp_path)
