@@ -11,10 +11,24 @@ ha:
 llm:
   main_model: claude-sonnet-5-5
   cheap_model: claude-haiku-5-5
-  max_tokens: 8000
+  max_tokens: 16000           # thinking tokens count against this
+  effort: medium              # output_config.effort (not a sampling param)
+  expected_output_tokens: 9000  # used only for the dry-run cost estimate
+  max_cost_usd: 3.0           # refuse to run above this estimate (ask the user first)
   samples_per_prompt: 5       # k, used to measure the noise floor
   # Do NOT add temperature/top_p/top_k: these models reject them.
   prompt_version: v1
+
+pricing:                      # USD per 1M tokens; verified against platform.claude.com pricing page
+  as_of: "2026-10-12"
+  claude-sonnet-5-5: {input: 2.00, output: 10.00}
+  claude-haiku-5-5: {input: 0.10, output: 0.50}   # prompts up to 100K tokens
+
+generation:
+  targets:                    # one prompt per target module; all component source is in context
+    - {name: binary_sensor, module: binary_sensor.py}
+    - {name: config_flow, module: config_flow.py}
+    - {name: init, module: __init__.py}
 
 execution:
   repeats: 3                  # runs per suite for flaky detection

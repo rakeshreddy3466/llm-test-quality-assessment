@@ -1,6 +1,6 @@
 import pytest
 
-from testquality.cli import SUBCOMMANDS, build_parser, main
+from testquality.cli import IMPLEMENTED, SUBCOMMANDS, build_parser, main
 
 
 def test_no_args_prints_help(capsys):
@@ -8,7 +8,7 @@ def test_no_args_prints_help(capsys):
     assert "testquality" in capsys.readouterr().out
 
 
-@pytest.mark.parametrize("name", sorted(SUBCOMMANDS))
+@pytest.mark.parametrize("name", sorted(set(SUBCOMMANDS) - set(IMPLEMENTED)))
 def test_stub_subcommand_exits_2(name, capsys):
     assert main([name]) == 2
     assert "not implemented" in capsys.readouterr().err

@@ -61,3 +61,10 @@ def get_api_key(root: Path | None = None) -> str | None:
     root = root or PROJECT_ROOT
     env = {**dotenv_values(root / ".env"), **os.environ}
     return env.get("ANTHROPIC_API_KEY") or None
+
+
+def get_workspace_id(root: Path | None = None) -> str | None:
+    """Optional: needed when the API key is not scoped to a workspace."""
+    root = root or PROJECT_ROOT
+    env = {**dotenv_values(root / ".env"), **os.environ}
+    return env.get("ANTHROPIC_WORKSPACE_ID") or None
