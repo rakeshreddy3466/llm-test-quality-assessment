@@ -81,8 +81,10 @@ Reported: `trace_name` (all tests, comparable between developers and LLM),
 
 Custom AST detector, per test function. Smells: empty test, no assertion, assertion roulette
 (> 3 asserts without messages), duplicate assert, magic number, conditional logic, sleepy test,
-redundant print, eager test (> 3 distinct SUT functions called before the end — from the dynamic
-trace; fallback: distinct attribute calls), try/except instead of `pytest.raises`.
+redundant print, eager test (>= 4 distinct SUT function names called in the test body, static),
+try/except instead of `pytest.raises`. Magic number: a numeric literal other than 0, 1, -1 inside
+an `assert` expression. Conditional logic: `if`/`for`/`while`/`match`/ternary in the body.
+Parametrised cases inherit the smells of their function.
 `smell_density` = smell instances / tests; `smelly_rate` = tests with >= 1 smell / tests.
 Exact thresholds are defined in `src/testquality/smells.py` and mirrored in phase-7 DECISIONS.
 

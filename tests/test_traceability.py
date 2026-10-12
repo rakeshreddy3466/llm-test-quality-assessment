@@ -33,7 +33,8 @@ def test_declared_target_resolution():
     doc = "Behaviour: x.\n\nTarget: ThresholdSensor._update_state"
     assert declared_target(doc, CANDS) == "binary_sensor:ThresholdSensor._update_state"
     assert declared_target("Target: async_setup_entry", CANDS) == "binary_sensor:async_setup_entry"
-    assert declared_target("Target: `async_migrate_entry()`", CANDS) == "__init__:async_migrate_entry"
+    got = declared_target("Target: `async_migrate_entry()`", CANDS)
+    assert got == "__init__:async_migrate_entry"
     assert declared_target("Target: nothing_here", CANDS) is None
     assert declared_target("no tag", CANDS) is None
     assert declared_target(None, CANDS) is None

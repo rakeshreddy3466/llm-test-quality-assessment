@@ -158,8 +158,20 @@ def _cmd_traceability(args: argparse.Namespace) -> int:
     return 0
 
 
-IMPLEMENTED: dict[str, object] = {"traceability": _cmd_traceability,"mutate": _cmd_mutate,
+def _cmd_smells(args: argparse.Namespace) -> int:
+    from .config import load_settings
+    from .coverage_tool import stable_pass_set
+    from .smells import run_smells
+
+    st = load_settings()
+    units, _, _ = _suite_units(st, args.suite)
+    print(run_smells(st, args.suite, units, stable_pass_set(st, args.suite)))
+    return 0
+
+
+IMPLEMENTED: dict[str, object] = {
     "generate": _cmd_generate, "execute": _cmd_execute, "coverage": _cmd_coverage,
+    "mutate": _cmd_mutate, "traceability": _cmd_traceability, "smells": _cmd_smells,
 }
 
 
@@ -182,6 +194,8 @@ def build_parser() -> argparse.ArgumentParser:
         if name == "mutate":
             p.add_argument("--suite", required=True, help="'developer' or a run id")
         if name == "traceability":
+            p.add_argument("--suite", required=True, help="'developer' or a run id")
+        if name == "smells":
             p.add_argument("--suite", required=True, help="'developer' or a run id")
         if name == "generate":
             p.add_argument("--model", action="append", help="model id (repeatable); default main")

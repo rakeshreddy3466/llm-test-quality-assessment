@@ -8,8 +8,8 @@ Read `docs/PLAN.md` first. Update this file at the end of every phase.
 | 3 | Executability | done (developer baseline measured; LLM suites pending generation) |
 | 4 | Coverage | done (developer + main_sonnet55_v1) |
 | 5 | Mutation testing | done (mutmut 3.8 works; developer + main_sonnet55_v1) |
-| 6 | Traceability | todo |
-| 7 | Test smells | todo |
+| 6 | Traceability | done (docs/metrics.md written first) |
+| 7 | Test smells | done |
 | 8 | Relevance & completeness | todo |
 | 9 | Manual review sample (STOP for user) | todo |
 | 10 | Metamorphic experiment | todo |
@@ -27,3 +27,5 @@ Read `docs/PLAN.md` first. Update this file at the end of every phase.
 - Haiku run (cheap model) not yet generated; run `uv run testquality generate --cheap --run-id cheap_haiku55_v1` if wanted for extra comparison (~$0.1).
 - Phase 5: `uv run testquality mutate --suite developer|<run_id>` (~5 min for 15 samples) -> results/mutation_{units,suites,mutants}.csv. mutmut workspace in work/ (gitignored, rebuilt per unit). 164 mutants. developer union 129/164 (0.787); LLM union 133/164 (0.811). score_global is the comparable metric; score_covered = brief's killed/(killed+survived).
 - config_flow samples mostly only touch config_flow.py functions (~10 mutants), hence tiny global scores: real, not a bug.
+- Phase 6: `uv run testquality traceability --suite developer|<run_id>` -> results/trace_tests.csv, trace_summary.csv. Plugin plugins/_tq_trace.py runs inside HA python. developer trace_name 0.378; LLM trace_name 0.301, trace_declared 0.533.
+- Phase 7: `uv run testquality smells --suite developer|<run_id>` -> results/smells_{tests,summary}.csv. Parametrised cases weight each function by its case count (developer file is heavily parametrised: roulette/conditional logic from loops over `vals`).
