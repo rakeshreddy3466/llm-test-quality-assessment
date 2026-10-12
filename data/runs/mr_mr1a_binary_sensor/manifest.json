@@ -1,0 +1,85 @@
+{
+  "run_id": "mr_mr1a_binary_sensor",
+  "created": "2026-10-12T22:28:33+00:00",
+  "prompt_version": "mr1a",
+  "models": [
+    "claude-sonnet-5-5"
+  ],
+  "k": 5,
+  "targets": [
+    "binary_sensor"
+  ],
+  "total_cost_usd": 0.359,
+  "samples": [
+    {
+      "target": "binary_sensor",
+      "sample": 0,
+      "model": "claude-sonnet-5-5",
+      "file": "test_binary_sensor__sonnet-5-5__s0.py",
+      "stop_reason": "end_turn",
+      "syntax_ok": true,
+      "n_tests": 20,
+      "n_tests_with_tags": 20,
+      "input_tokens": 9149,
+      "output_tokens": 4992,
+      "cost_usd": 0.06822,
+      "error": null
+    },
+    {
+      "target": "binary_sensor",
+      "sample": 1,
+      "model": "claude-sonnet-5-5",
+      "file": "test_binary_sensor__sonnet-5-5__s1.py",
+      "stop_reason": "end_turn",
+      "syntax_ok": true,
+      "n_tests": 26,
+      "n_tests_with_tags": 26,
+      "input_tokens": 9149,
+      "output_tokens": 5561,
+      "cost_usd": 0.07391,
+      "error": null
+    },
+    {
+      "target": "binary_sensor",
+      "sample": 2,
+      "model": "claude-sonnet-5-5",
+      "file": "test_binary_sensor__sonnet-5-5__s2.py",
+      "stop_reason": "end_turn",
+      "syntax_ok": true,
+      "n_tests": 21,
+      "n_tests_with_tags": 21,
+      "input_tokens": 9149,
+      "output_tokens": 4746,
+      "cost_usd": 0.06576,
+      "error": null
+    },
+    {
+      "target": "binary_sensor",
+      "sample": 3,
+      "model": "claude-sonnet-5-5",
+      "file": "test_binary_sensor__sonnet-5-5__s3.py",
+      "stop_reason": "end_turn",
+      "syntax_ok": true,
+      "n_tests": 20,
+      "n_tests_with_tags": 20,
+      "input_tokens": 9149,
+      "output_tokens": 5076,
+      "cost_usd": 0.06906,
+      "error": null
+    },
+    {
+      "target": "binary_sensor",
+      "sample": 4,
+      "model": "claude-sonnet-5-5",
+      "file": "test_binary_sensor__sonnet-5-5__s4.py",
+      "stop_reason": "end_turn",
+      "syntax_ok": true,
+      "n_tests": 35,
+      "n_tests_with_tags": 35,
+      "input_tokens": 9149,
+      "output_tokens": 6375,
+      "cost_usd": 0.08205,
+      "error": null
+    }
+  ]
+}

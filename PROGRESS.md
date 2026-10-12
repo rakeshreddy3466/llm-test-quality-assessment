@@ -12,7 +12,7 @@ Read `docs/PLAN.md` first. Update this file at the end of every phase.
 | 7 | Test smells | done |
 | 8 | Relevance & completeness | done (behaviours.yaml is DRAFT) |
 | 9 | Manual review sample (STOP for user) | sample built; WAITING for user ratings (manual_review/sample_rated.csv) |
-| 10 | Metamorphic experiment | todo |
+| 10 | Metamorphic experiment | variants generated (6 x binary_sensor k=5, $2.68); evaluation running -> results/mr_*.csv |
 | 11 | Results/report.py/make all | todo |
 | 12 | CI | todo |
 | 13 | Report | todo |
@@ -32,3 +32,4 @@ Read `docs/PLAN.md` first. Update this file at the end of every phase.
 - Phase 8: data/behaviours.yaml = 40 behaviours, DRAFT needs human check (ranges for tag 2026.10.1). `uv run testquality relevance --suite <s>` needs results/cache/coverage_<s>.json (run `coverage` first). 38 reachable behaviours (2 module-level excluded); developer completeness 1.0 by construction.
 - NEXT: Phase 9 manual review sample, then STOP and tell the user.
 - Phase 9: manual_review/rubric.md, sample_blinded.csv (60 items: 20 developer, 40 LLM; seed 20261012), key_do_not_open_until_rated.csv. Assistant must NEVER fill ratings. User saves ratings as manual_review/sample_rated.csv. RQ2 stays 'pending manual review' until then. Meanwhile phases 10-12 proceed.
+- Phase 10: runs data/runs/mr_<variant>_binary_sensor (mr1a,b,c paraphrases; mr2 rename locals; mr3 reorder; mr4 strip comments). Evaluate: `uv run testquality metamorphic --evaluate --compare` (~45 min, uses HA tree + work/ workspace: do not run other HA commands concurrently). Compare only: `uv run testquality metamorphic --compare`.

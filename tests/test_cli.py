@@ -8,9 +8,16 @@ def test_no_args_prints_help(capsys):
     assert "testquality" in capsys.readouterr().out
 
 
-@pytest.mark.parametrize("name", sorted(set(SUBCOMMANDS) - set(IMPLEMENTED)))
-def test_stub_subcommand_exits_2(name, capsys):
-    assert main([name]) == 2
+def test_every_subcommand_has_a_handler():
+    assert set(SUBCOMMANDS) == set(IMPLEMENTED)
+
+
+@pytest.mark.parametrize("name", sorted(SUBCOMMANDS))
+def test_unimplemented_dispatch_exits_2(name, capsys, monkeypatch):
+    monkeypatch.setattr("testquality.cli.IMPLEMENTED", {})
+    needs_suite = {"execute", "coverage", "mutate", "traceability", "smells", "relevance"}
+    argv = [name, "--suite", "x"] if name in needs_suite else [name]
+    assert main(argv) == 2
     assert "not implemented" in capsys.readouterr().err
 
 

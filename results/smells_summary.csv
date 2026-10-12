@@ -1,3 +1,6 @@
 suite,tests,valid_tests,smelly_rate,smell_density,rate_empty_test,rate_no_assertion,rate_assertion_roulette,rate_duplicate_assert,rate_magic_number,rate_conditional_logic,rate_sleepy_test,rate_redundant_print,rate_eager_test,rate_try_except
 developer,115,115,0.9826,2.4957,0.0,0.0,0.9739,0.0609,0.6,0.7913,0.0,0.0,0.0,0.0
 main_sonnet55_v1,294,287,0.4425,0.662,0.0,0.0557,0.2021,0.0383,0.2718,0.0,0.0,0.0,0.0,0.0
+mr_mr1a_binary_sensor,128,128,0.3672,0.6719,0.0,0.0,0.25,0.1328,0.1328,0.0078,0.0,0.0,0.0,0.0
+mr_mr1b_binary_sensor,160,160,0.5188,0.9625,0.0,0.0563,0.3812,0.1688,0.1562,0.0,0.0,0.0,0.0,0.0
+mr_mr1c_binary_sensor,117,117,0.4274,0.7607,0.0,0.0,0.2821,0.1453,0.1624,0.0085,0.0,0.0,0.0,0.0

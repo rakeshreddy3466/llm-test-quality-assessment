@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from collections.abc import Sequence
 
@@ -31,7 +32,9 @@ def _cmd_generate(args: argparse.Namespace) -> int:
     llm = st.config["llm"]
     models = args.model or [llm["cheap_model"] if args.cheap else llm["main_model"]]
     k = args.k or llm["samples_per_prompt"]
-    plan = make_plan(st, models=models, k=k, targets=args.target)
+    plan = make_plan(
+        st, models=models, k=k, targets=args.target, prompt_version=args.prompt_version
+    )
     print(f"prompt version: {plan.prompts[0].version}  targets: {[p.target for p in plan.prompts]}")
     print(f"calls: {plan.n_calls} ({len(plan.prompts)} prompts x {len(models)} models x k={k})")
     for m in models:
@@ -95,19 +98,9 @@ def _cmd_execute(args: argparse.Namespace) -> int:
 
 
 def _suite_units(st, suite: str):
-    """Return (units, staging_id, targets) for 'developer' or a generation run id."""
-    import json
+    from .suites import suite_units
 
-    from .executor import developer_units
-
-    if suite == "developer":
-        units = developer_units(st)
-        return units, None, {u.name: "developer" for u in units}
-    run_dir = st.runs_dir / suite
-    mani = json.loads((run_dir / "manifest.json").read_text())
-    samples = [s for s in mani["samples"] if s["file"]]
-    units = [run_dir / "samples" / s["file"] for s in samples]
-    return units, suite, {s["file"]: s["target"] for s in samples}
+    return suite_units(st, suite)
 
 
 def _cmd_coverage(args: argparse.Namespace) -> int:
@@ -189,10 +182,58 @@ def _cmd_review_sample(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_metamorphic(args: argparse.Namespace) -> int:
+    from .config import load_settings
+    from .coverage_tool import run_coverage, stable_pass_set
+    from .executor import run_executability
+    from .metamorphic import TARGET, VARIANTS, run_compare
+    from .mutation_tool import run_mutation
+    from .smells import run_smells
+    from .suites import suite_units
+    from .traceability import run_traceability
+
+    st = load_settings()
+    variants = args.variant or VARIANTS
+    if args.evaluate:
+        for v in variants:
+            suite = f"mr_{v}_{TARGET}"
+            units, staging, targets = suite_units(st, suite)
+            n = len(json.loads((st.runs_dir / suite / "manifest.json").read_text())["samples"])
+            print(f"[{suite}] execute")
+            run_executability(
+                st, suite, units, repeats=st.config["execution"]["repeats"],
+                timeout=st.config["execution"]["timeout_seconds"], staging_id=staging,
+                units_requested=n,
+            )
+            stable = stable_pass_set(st, suite)
+            print(f"[{suite}] coverage")
+            run_coverage(st, suite, units, staging_id=staging, stable=stable, targets=targets)
+            print(f"[{suite}] mutation")
+            run_mutation(st, suite, units, targets, stable, with_snapshots=False)
+            print(f"[{suite}] traceability + smells")
+            run_traceability(st, suite, units, staging_id=staging, stable=stable,
+                             has_declaration=True)
+            run_smells(st, suite, units, stable)
+    if args.compare or not args.evaluate:
+        run_compare(st, variants)
+        print("wrote results/mr_metrics.csv and results/mr_jaccard.csv")
+    return 0
+
+
+def _cmd_report(args: argparse.Namespace) -> int:
+    from .config import load_settings
+    from .report import build
+
+    for path in build(load_settings()):
+        print(path)
+    return 0
+
+
 IMPLEMENTED: dict[str, object] = {
     "generate": _cmd_generate, "execute": _cmd_execute, "coverage": _cmd_coverage,
     "mutate": _cmd_mutate, "traceability": _cmd_traceability, "smells": _cmd_smells,
     "relevance": _cmd_relevance, "review-sample": _cmd_review_sample,
+    "metamorphic": _cmd_metamorphic, "report": _cmd_report,
 }
 
 
@@ -223,6 +264,11 @@ def build_parser() -> argparse.ArgumentParser:
         if name == "review-sample":
             p.add_argument("--run", default="main_sonnet55_v1", help="generation run id")
             p.add_argument("--force", action="store_true", help="overwrite an existing sample")
+        if name == "metamorphic":
+            p.add_argument("--evaluate", action="store_true",
+                           help="run execute/coverage/mutate/traceability/smells per variant")
+            p.add_argument("--compare", action="store_true", help="write results/mr_*.csv")
+            p.add_argument("--variant", action="append", help="limit to variant(s)")
         if name == "generate":
             p.add_argument("--model", action="append", help="model id (repeatable); default main")
             p.add_argument("--cheap", action="store_true", help="use the cheap model")
@@ -231,6 +277,7 @@ def build_parser() -> argparse.ArgumentParser:
             p.add_argument("--dry-run", action="store_true", help="show plan+cost, no API call")
             p.add_argument("--show-prompt", action="store_true", help="print first prompt")
             p.add_argument("--run-id", help="override run id")
+            p.add_argument("--prompt-version", help="v1 (default) or a metamorphic variant")
     return parser
 
 

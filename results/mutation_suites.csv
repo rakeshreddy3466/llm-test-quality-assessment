@@ -5,3 +5,9 @@ main_sonnet55_v1,all,164,133,31,0,0,0.811,0.811
 main_sonnet55_v1,target:binary_sensor,164,97,20,0,47,0.8291,0.5915
 main_sonnet55_v1,target:config_flow,164,20,12,0,132,0.625,0.122
 main_sonnet55_v1,target:init,164,95,31,0,38,0.754,0.5793
+mr_mr1a_binary_sensor,all,164,106,52,0,6,0.6709,0.6463
+mr_mr1a_binary_sensor,target:binary_sensor,164,106,52,0,6,0.6709,0.6463
+mr_mr1b_binary_sensor,all,164,98,19,0,47,0.8376,0.5976
+mr_mr1b_binary_sensor,target:binary_sensor,164,98,19,0,47,0.8376,0.5976
+mr_mr1c_binary_sensor,all,164,89,28,0,47,0.7607,0.5427
+mr_mr1c_binary_sensor,target:binary_sensor,164,89,28,0,47,0.7607,0.5427
