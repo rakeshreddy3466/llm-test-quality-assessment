@@ -182,7 +182,7 @@ maintenance cost for fault detection, not a free improvement.
 of values, and the detector counts every executed case of such a function, so a single
 data-driven function is counted as many smelly tests. The numbers (smelly tests:
 {{F:dev_smelly}} against {{F:llm_smelly}}) therefore overstate the difference in maintainability.
-The LLM suite is still simpler to read, but the figure should not be read as "developers write
+By this detector the LLM suite still has fewer smells, but the figure should not be read as "developers write
 smelly tests".
 
 **What RQ2 says about trusting automatic scores.** With 60 rated tests and one rater, none of
@@ -193,12 +193,12 @@ covered behaviours) is weakly related to the human view; clarity ({{F:rq2_clarit
 maintainability ({{F:rq2_maintainability_rho}}) and oracle strength
 ({{F:rq2_oracle_strength_rho}}) are not. In plain words: automatic scores are useful to screen a
 large number of tests and to compare suites in aggregate, but they cannot replace a human for
-judging whether a test is clear, maintainable or has a meaningful oracle. A part of the low
-$\kappa$ comes from our binning of continuous scores into five levels, so $\rho$ is the fairer
+judging whether a test is clear, maintainable or has a meaningful oracle. Part of the low
+$\kappa$ may come from our binning of continuous scores into five levels, so $\rho$ is the fairer
 figure; it is also low.
 
 **RQ3 shows no clear prompt sensitivity, but power is low.** Across {{F:mr_variants}} variants
-and six metrics, {{F:mr_sig}} of {{F:mr_total}} comparisons are significant at $p < 0.05$, which is
+and their metrics, {{F:mr_sig}} of {{F:mr_total}} comparisons are significant at $p < 0.05$, which is
 about what chance alone would give without correction for multiple comparisons. The overlap of
 killed mutants between a variant and the baseline ({{F:mr_jac_min}} to {{F:mr_jac_max}}) stays at
 the level of the overlap between repeated samples of the same prompt ({{F:mr_noise}}). With
