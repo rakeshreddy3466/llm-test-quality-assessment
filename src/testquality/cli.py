@@ -21,6 +21,7 @@ SUBCOMMANDS: dict[str, tuple[int, str]] = {
     "review-sample": (9, "Build the blinded manual-review sample"),
     "metamorphic": (10, "Metamorphic experiment (MR1..MR4) vs noise floor"),
     "report": (11, "Build tables and figures from results/*.csv"),
+    "review": (9, "Interactive manual rating of the blinded sample (`review rate`)"),
     "rq2-prepare": (9, "Automatic scores of the 60 sampled tests (per-test mutation runs)"),
 }
 
@@ -238,12 +239,28 @@ def _cmd_rq2_prepare(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_review(args: argparse.Namespace) -> int:
+    from pathlib import Path
+
+    from .config import PROJECT_ROOT
+    from .rate import run
+
+    folder = PROJECT_ROOT / "manual_review"
+    blinded = Path(args.file) if args.file else folder / "sample_blinded.csv"
+    rated = Path(args.out) if args.out else folder / "sample_rated.csv"
+    try:
+        run(blinded, rated)
+    except (KeyboardInterrupt, EOFError):
+        print("\nInterrupted: ratings saved so far are kept; run the command again to resume.")
+    return 0
+
+
 IMPLEMENTED: dict[str, object] = {
     "generate": _cmd_generate, "execute": _cmd_execute, "coverage": _cmd_coverage,
     "mutate": _cmd_mutate, "traceability": _cmd_traceability, "smells": _cmd_smells,
     "relevance": _cmd_relevance, "review-sample": _cmd_review_sample,
     "metamorphic": _cmd_metamorphic, "report": _cmd_report,
-    "rq2-prepare": _cmd_rq2_prepare,
+    "rq2-prepare": _cmd_rq2_prepare, "review": _cmd_review,
 }
 
 
@@ -271,6 +288,11 @@ def build_parser() -> argparse.ArgumentParser:
             p.add_argument("--suite", required=True, help="'developer' or a run id")
         if name == "relevance":
             p.add_argument("--suite", required=True, help="'developer' or a run id")
+        if name == "review":
+            p.add_argument("action", nargs="?", default="rate", choices=["rate"])
+            p.add_argument("--file", 
+                           help="blinded sample CSV (default manual_review/sample_blinded.csv)")
+            p.add_argument("--out", help="rated file (default manual_review/sample_rated.csv)")
         if name == "review-sample":
             p.add_argument("--run", default="main_sonnet55_v1", help="generation run id")
             p.add_argument("--force", action="store_true", help="overwrite an existing sample")

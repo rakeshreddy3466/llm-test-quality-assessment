@@ -57,6 +57,9 @@ attribute, missing call) and whether the assertions would detect them.
 | 5 | Precise assertions on outcome, boundaries and side effects; would catch almost any defect. |
 
 ## Procedure
+0. Easiest: `uv run testquality review rate` shows one test at a time, asks for the four
+   scores and saves after every item to `manual_review/sample_rated.csv` (type `q` to stop;
+   run it again to resume). Editing the CSV by hand works too.
 1. Rate in the order of `item_id` (R01...R60), one sitting if possible.
 2. Integers 1-5 only; leave nothing blank (use 3 if truly undecidable, and say so in `notes`).
 3. Save the file as `manual_review/sample_rated.csv` (keep `sample_blinded.csv` untouched).
