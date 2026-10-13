@@ -11,11 +11,11 @@ Read `docs/PLAN.md` first. Update this file at the end of every phase.
 | 6 | Traceability | done (docs/metrics.md written first) |
 | 7 | Test smells | done |
 | 8 | Relevance & completeness | done (behaviours.yaml is DRAFT) |
-| 9 | Manual review sample (STOP for user) | sample built; WAITING for user ratings (manual_review/sample_rated.csv) |
+| 9 | Manual review sample (STOP for user) | done: 60/60 ratings by the author (manual_review/sample_rated.csv) |
 | 10 | Metamorphic experiment | done (results/mr_*.csv) |
 | 11 | Results/report.py/make all | done (`make all`) |
 | 12 | CI | done (green on Python 3.12 + 3.14) |
-| 13 | Report | done: report/report.md + report.pdf + refs.bib (15 refs verified via Crossref); RQ2 pending ratings |
+| 13 | Report | done: report/report.md + report.pdf + refs.bib (15 refs verified via Crossref); RQ2 filled from ratings; Abstract, Discussion, Conclusion, Use of AI tools added |
 
 ## Notes for next session
 - `.env` has HA_PYTHON set to the `.venv` interpreter. Do not print `.env`.

@@ -29,14 +29,15 @@ def weighted_kappa(a: list[int], b: list[int], k: int = 5) -> float:
     return 1.0 - num / den if den else float("nan")
 
 
-def agreement_table(rated: Path, auto: Path) -> str:
+def agreement_rows(rated: Path, auto: Path) -> list[dict]:
+    """One dict per manual scale: n, rho, p, kappa (None when undefined)."""
     from scipy.stats import spearmanr
 
     with open(rated, newline="", encoding="utf-8") as fh:
         manual = {r["item_id"]: r for r in csv.DictReader(fh)}
     with open(auto, newline="", encoding="utf-8") as fh:
         autos = {r["item_id"]: r for r in csv.DictReader(fh)}
-    lines = ["| Scale | n | Spearman rho | p | Weighted kappa |", "|---|---|---|---|---|"]
+    out = []
     for scale, col in SCALES.items():
         pairs = []
         for item, m in manual.items():
@@ -44,16 +45,28 @@ def agreement_table(rated: Path, auto: Path) -> str:
                 pairs.append((int(m[scale]), int(float(autos[item][col]))))
             except (KeyError, ValueError):
                 continue
-        if len(pairs) < 3:
-            lines.append(f"| {scale} | {len(pairs)} | pending | pending | pending |")
-            continue
         x, y = [p[0] for p in pairs], [p[1] for p in pairs]
-        if len(set(x)) < 2 or len(set(y)) < 2:
-            lines.append(f"| {scale} | {len(pairs)} | undefined (constant ratings) | - | - |")
-            continue
-        rho, p = spearmanr(x, y)
-        lines.append(f"| {scale} | {len(pairs)} | {rho:.3f} | {p:.3f} | "
-                     f"{weighted_kappa(x, y):.3f} |")
+        rec = {"scale": scale, "n": len(pairs), "rho": None, "p": None, "kappa": None,
+               "status": "ok"}
+        if len(pairs) < 3:
+            rec["status"] = "pending"
+        elif len(set(x)) < 2 or len(set(y)) < 2:
+            rec["status"] = "undefined (constant ratings)"
+        else:
+            rho, p = spearmanr(x, y)
+            rec.update(rho=float(rho), p=float(p), kappa=weighted_kappa(x, y))
+        out.append(rec)
+    return out
+
+
+def agreement_table(rated: Path, auto: Path) -> str:
+    lines = ["| Scale | n | Spearman rho | p | Weighted kappa |", "|---|---|---|---|---|"]
+    for r in agreement_rows(rated, auto):
+        if r["status"] == "ok":
+            lines.append(f"| {r['scale']} | {r['n']} | {r['rho']:.3f} | {r['p']:.3f} | "
+                         f"{r['kappa']:.3f} |")
+        else:
+            lines.append(f"| {r['scale']} | {r['n']} | {r['status']} | - | - |")
     return "\n".join(lines) + "\n"
 
 

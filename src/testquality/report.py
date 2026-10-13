@@ -470,14 +470,102 @@ def findings(settings: Settings) -> list[str]:
                    + "; ".join(bits) + ".")
     else:
         out.append("**Metamorphic sensitivity.** pending (results/mr_metrics.csv missing).")
-    out.append("**Agreement with manual review (RQ2).** pending manual review."
-               if not (settings.project_root / "manual_review/sample_rated.csv").exists()
-               else "**Agreement with manual review (RQ2).** see results/tables/rq2.md.")
+    rated = settings.project_root / "manual_review/sample_rated.csv"
+    auto = settings.results_dir / "rq2_auto.csv"
+    if rated.exists() and auto.exists():
+        from .rq2 import agreement_rows
+
+        bits = [f"{r['scale']}: rho {r['rho']:.2f}, kappa {r['kappa']:.2f}"
+                for r in agreement_rows(rated, auto) if r["status"] == "ok"]
+        out.append("**Agreement with manual review (RQ2, n=60).** " + "; ".join(bits)
+                   + " (table in the RQ2 section).")
+    else:
+        out.append("**Agreement with manual review (RQ2).** pending manual review.")
     return out
 
 
-def _fill(template: str, tables: Path, figures: str, items: list[str]) -> str:
+
+def facts(settings: Settings) -> dict[str, str]:
+    """Numbers quoted in the abstract and discussion; all read from results/*.csv."""
+    d = Data(settings.results_dir)
+    f: dict[str, str] = {}
+
+    def put(key: str, val: str | None) -> None:
+        f[key] = val if val is not None else "n/a"
+
+    cd, cl = (row(d.cov_suites, suite=s, scope="all") for s in (DEVELOPER, LLM_SUITE))
+    md, ml = (row(d.mut_suites, suite=s, scope="all") for s in (DEVELOPER, LLM_SUITE))
+    if cd and cl and md and ml:
+        put("dev_line", pct(num(cd["line_cov"])))
+        put("llm_line", pct(num(cl["line_cov"])))
+        put("dev_branch", pct(num(cd["branch_cov"])))
+        put("llm_branch", pct(num(cl["branch_cov"])))
+        put("dev_mut", pct(num(md["score_global"])))
+        put("llm_mut", pct(num(ml["score_global"])))
+        put("mutants", md["mutants_total"])
+        put("dev_tests", cd["tests_passing"])
+        put("llm_tests", cl["tests_passing"])
+        nd, nl = num(cd["tests_passing"]), num(cl["tests_passing"])
+        put("test_ratio", f"{nl / nd:.1f}" if nd and nl else None)
+    ex = row(d.exec_summary, suite=LLM_SUITE)
+    if ex:
+        put("llm_pass", pct(num(ex["stable_pass_rate"])))
+        put("llm_generated", ex["tests_collected"])
+    for t in TARGETS:
+        mu = [float(r["score_global"]) for r in d.mut_units
+              if r["suite"] == LLM_SUITE and target_of(r["unit"], LLM_SUITE) == t]
+        dv = row(d.mut_units, suite=DEVELOPER, unit=DEV_FILE[t])
+        put(f"{t}_llm_mut", pct(statistics.fmean(mu)) if mu else None)
+        put(f"{t}_dev_mut", pct(num(dv["score_global"])) if dv else None)
+        u = row(d.mut_suites, suite=LLM_SUITE, scope=f"target:{t}")
+        v = row(d.mut_suites, suite=DEVELOPER, scope=f"target:{t}")
+        put(f"{t}_llm_union_mut", pct(num(u["score_global"])) if u else None)
+        put(f"{t}_dev_file_mut", pct(num(v["score_global"])) if v else None)
+    sd, sl = (row(d.smells, suite=s) for s in (DEVELOPER, LLM_SUITE))
+    if sd and sl:
+        put("dev_smelly", pct(num(sd["smelly_rate"])))
+        put("llm_smelly", pct(num(sl["smelly_rate"])))
+        put("dev_roulette", pct(num(sd["rate_assertion_roulette"])))
+        put("llm_roulette", pct(num(sl["rate_assertion_roulette"])))
+        put("dev_cond", pct(num(sd["rate_conditional_logic"])))
+        put("llm_cond", pct(num(sl["rate_conditional_logic"])))
+    rated = settings.project_root / "manual_review" / "sample_rated.csv"
+    auto = settings.results_dir / "rq2_auto.csv"
+    if rated.exists() and auto.exists():
+        from .rq2 import agreement_rows
+
+        for r in agreement_rows(rated, auto):
+            k = r["scale"]
+            put(f"rq2_{k}_rho", f"{r['rho']:.2f}" if r["rho"] is not None else None)
+            put(f"rq2_{k}_p", f"{r['p']:.3f}" if r["p"] is not None else None)
+            put(f"rq2_{k}_kappa", f"{r['kappa']:.2f}" if r["kappa"] is not None else None)
+            put(f"rq2_{k}_n", str(r["n"]))
+        ok = [r for r in agreement_rows(rated, auto) if r["rho"] is not None]
+        if ok:
+            best = max(ok, key=lambda r: r["rho"])
+            put("rq2_best_scale", best["scale"].replace("_", " "))
+            put("rq2_best_rho", f"{best['rho']:.2f}")
+            put("rq2_max_kappa", f"{max(r['kappa'] for r in ok):.2f}")
+    if d.mr_metrics:
+        rows_v = [r for r in d.mr_metrics if r["variant"] != "mr1_pooled"]
+        sig = [r for r in rows_v if (num(r["mwu_p"]) or 1) < 0.05]
+        put("mr_sig", str(len(sig)))
+        put("mr_total", str(len(rows_v)))
+        put("mr_variants", str(len({r["variant"] for r in rows_v})))
+        jk = [r for r in d.mr_jaccard if r["kind"] == "jaccard_killed"
+              and r["variant"] != "mr1_pooled"]
+        if jk:
+            cross = [float(r["cross_mean"]) for r in jk]
+            put("mr_jac_min", f3(min(cross)))
+            put("mr_jac_max", f3(max(cross)))
+            put("mr_noise", f3(num(jk[0]["noise_floor_mean"])))
+    return f
+
+def _fill(template: str, tables: Path, figures: str, items: list[str],
+          fact_map: dict[str, str] | None = None) -> str:
     text = template.replace("{{FINDINGS}}", "\n".join(f"- {x}" for x in items))
+    for k, v in (fact_map or {}).items():
+        text = text.replace("{{F:" + k + "}}", v)
     for p in sorted(tables.glob("*.md")):
         text = text.replace("{{TABLE:" + p.stem + "}}", p.read_text(encoding="utf-8"))
     for name in ("suite_quality", "mutation_per_sample", "rq3_jaccard"):
@@ -495,7 +583,7 @@ def build_documents(settings: Settings) -> list[Path]:
     if tpl.exists():
         out = root / "report" / "report.md"
         out.write_text(_fill(tpl.read_text(encoding="utf-8"), tables, "../results/figures",
-                             items), encoding="utf-8")
+                             items, facts(settings)), encoding="utf-8")
         written.append(out)
     readme = root / "README.md"
     start, end = "<!-- RESULTS:START -->", "<!-- RESULTS:END -->"
